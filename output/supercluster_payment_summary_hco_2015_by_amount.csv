@@ -1,0 +1,821 @@
+"payment_receiver_supercluster","is_hospital","is_foreign","total_amount_CHF","nr_of_payments","nr_of_pharma_companies"
+"Anonym",,,19731621.8632796,1540,34
+"EXCEMED - Excellence in Medical Education",FALSE,FALSE,4043310.1,1,1
+"Universitäts-/Kinderspital, Universität Zürich & Zurich Heart House",TRUE,FALSE,4013536.48,153,44
+"European Society for Medical Oncology",FALSE,TRUE,3062324.86,10,10
+"European League Against Rheumatism",FALSE,TRUE,2765352.7,7,6
+"Universitäts-/Kinderspital, Felix Platter-Spital & Universität Basel",TRUE,FALSE,2550969.97,113,40
+"European Respiratory Society",FALSE,TRUE,2372427.39,5,5
+"Universitätsspital & Universität Bern",TRUE,FALSE,2307222.61,123,41
+"Centre Hospitalier Universitaire Vaudois & Université de Lausanne",TRUE,FALSE,1806935.4,84,39
+"Hôpitaux Universitaires de Genève & Université de Genève",TRUE,FALSE,1593324.52,108,38
+"EASL European Association for the Study of the Liver",FALSE,TRUE,1497026.7,3,3
+"Schweizerische Arbeitsgemeinschaft für Klinische Krebsforschung",FALSE,FALSE,1067488.208402,35,20
+"Kantonsspital St. Gallen",TRUE,FALSE,1033891.07,52,40
+"ETH Zürich",FALSE,FALSE,798354,2,2
+"European Academy of Allergy and Clinical Immunology (EAACI)",FALSE,TRUE,762844.89,6,5
+"Ente Ospedaliero Cantonale",TRUE,FALSE,761274.55,76,37
+"EADV European Academy of Dermatology and Venereology",FALSE,TRUE,744499.32,3,3
+"ecancermedicalscience",FALSE,TRUE,695503.31,2,2
+"European School for Advanced Studies in Ophthalmology",FALSE,TRUE,671782,1,1
+"Schweizerische Gesellschaft für Allgemeine Innere Medizin",FALSE,FALSE,612364,17,17
+"International Osteoporosis Foundation (IOF)",FALSE,TRUE,548723.56,3,3
+"Schweizerische Gesellschaft für Rheumatologie",FALSE,FALSE,487091,12,7
+"Rheumaliga Schweiz & Mitgliederorganisationen",FALSE,FALSE,481388.15486,56,17
+"Kantonsspital Aarau AG",TRUE,FALSE,462115.95,46,28
+"European Society of Gynaecological Oncology (ESGO)",FALSE,TRUE,455410,1,1
+"Luzerner Kantonsspital",TRUE,FALSE,449173.74,52,31
+"EHC – European Haemophilia Consortium",FALSE,TRUE,439775.036,2,1
+"European Committee for Treatment and Research in Multiple Sclerosis",FALSE,TRUE,434605.86,3,3
+"Schweizerische Multiple Sklerose Gesellschaft",FALSE,FALSE,422220,31,7
+"International AIDS Society",FALSE,TRUE,419151,2,2
+"Privatklinikgruppe Hirslanden",TRUE,FALSE,405958.78,80,29
+"Schweizerische Herzstiftung",FALSE,FALSE,387900,16,10
+"COR2ED",FALSE,FALSE,386931,1,1
+"European Society of Clinical Microbiology and Infectious Diseases",FALSE,TRUE,384702.2,3,3
+"European Association of Dermato-Oncology EADO",FALSE,TRUE,365575.93,3,3
+"Rheuma Schweiz",FALSE,FALSE,340547.2,5,5
+"Forum für medizinische Fortbildung - FomF GmbH",FALSE,FALSE,314224,10,10
+"MediService AG",FALSE,FALSE,311053.88,3,3
+"SIOG International Society of Geriatric Oncology",FALSE,TRUE,295082.34,5,5
+"Schweizerische Gesellschaft für Dermatologie und Venerologie",FALSE,FALSE,259550,16,13
+"Stadtspital Triemli",TRUE,FALSE,258399.43,40,26
+"Kantonsspital Graubünden",TRUE,FALSE,251721.55,21,18
+"Ophthorobotics AG",FALSE,FALSE,250000,1,1
+"Lungenligen",FALSE,FALSE,245260,28,15
+"Advisis AG",FALSE,FALSE,241960,3,3
+"European Stroke Organisation (ESO)",FALSE,TRUE,239735.85,2,2
+"Kollegium für Hausarztmedizin",FALSE,FALSE,236484.8,16,14
+"Swiss Academy of Multidisciplinary Oncology",FALSE,TRUE,235604.61,16,15
+"Schweizerische Gesellschaft für Kardiologie & Mitgliederorganisationen",FALSE,FALSE,232397.93,25,16
+"Leukemia Patient Advocates Foundation",FALSE,TRUE,225597.8,2,1
+"SGED - Schweiz. Gesellschaft f. Endokrinologie & Diabetolgie",FALSE,FALSE,220100,7,7
+"TOPEC Global LLC (GmbH)",FALSE,FALSE,216600,1,1
+"World stroke organization",FALSE,TRUE,213524.48,1,1
+"Schweizerische Diabetesgesellschaft & Mitgliederorganisationen",FALSE,FALSE,212059.4,52,10
+"Schweizerische Ophthalmologische Gesellschaft",FALSE,FALSE,211754,4,2
+"IMK - Institut für Medizin und Kommunikation AG",FALSE,FALSE,210014,5,5
+"Swiss Academic Foundation for Education in Infectious Diseases",FALSE,FALSE,210000,4,4
+"IPOPI",FALSE,TRUE,207719.4,3,1
+"Kantonsspital Winterthur",TRUE,FALSE,201914.81,42,30
+"IBDnet – Swiss Research and Communications Network on Inflammatory Bowel Disease",FALSE,FALSE,190500,3,3
+"Swiss HIV Cohort Study",FALSE,FALSE,184326,3,3
+"GSASA, Schweizerischer Verein der Amts- und Spitalapotheker",FALSE,FALSE,183700,20,20
+"Congrex Schweiz AG, MedArt Basel",FALSE,FALSE,178269,5,5
+"Schweizerische Hämophilie-Gesellschaft",FALSE,FALSE,175441.5009,11,5
+"Kantonsspital Baselland",TRUE,FALSE,171174.6,37,22
+"Schweizerische Gesellschaft für Gastroenterologie",FALSE,FALSE,168271,9,8
+"European Dermatology Forum",FALSE,TRUE,166056.96,5,5
+"Schweizerische Neurologische Gesellschaft SNG",FALSE,FALSE,165580,8,8
+"World Heart Federation",FALSE,TRUE,165571.04,2,2
+"Hôpital du Valais",TRUE,FALSE,147741.64,44,34
+"Onkologiepflege Schweiz",FALSE,FALSE,140953,21,17
+"UICC - Union for International Cancer Control",FALSE,TRUE,138925.86,5,4
+"World Health Organization",FALSE,TRUE,131437.8,1,1
+"gynécologie suisse SGGG",FALSE,FALSE,126373,12,6
+"European Confederation of Medical Mycology ECMM",FALSE,TRUE,125466.05,2,2
+"OsteoSwiss & Osteoporose-Rat",FALSE,FALSE,120040,6,4
+"Gesellschaft für Arzneimittelsicherheit in der Psychiatrie",FALSE,FALSE,117800,4,4
+"Strongbones GmbH",FALSE,FALSE,117518.83,3,3
+"Quadrimed",FALSE,FALSE,116540.3,11,11
+"Schweizerische Gesellschaft für Allergologie und Immunologie",FALSE,FALSE,112000,9,7
+"Schweizerische Hypertonie Gesellschaft",FALSE,FALSE,110768.9,10,8
+"HFR – hôpital fribourgeois",TRUE,FALSE,110258.4,28,23
+"Arud Zentren für Suchtmedizin",FALSE,FALSE,109771.75,6,6
+"Spital Thurgau AG",TRUE,FALSE,107455.97,44,26
+"aha! Allergiezentrum Schweiz",FALSE,FALSE,105565,10,4
+"Stiftung SONK",FALSE,FALSE,103262.25,17,15
+"Schweizerische Gesellschaft für Reproduktionsmedizin",FALSE,FALSE,100475.36,12,6
+"Retina Suisse",FALSE,FALSE,100400,4,2
+"Schweizerisches Tropeninstitut",FALSE,FALSE,99604.88,8,7
+"Medvis GmbH",FALSE,FALSE,97248,2,2
+"Bürgerspital Basel",TRUE,FALSE,96932,1,1
+"pharmaSuisse",FALSE,FALSE,95480,5,3
+"GBS & CIDP Initiative",FALSE,FALSE,93994.5,4,2
+"Zürcher Gesundheitsnetz ZGN",FALSE,FALSE,92700,10,7
+"Hôpital neuchâtelois",TRUE,FALSE,92541,20,12
+"Schw. Gesellschaft für Urologie SGU",FALSE,FALSE,88671,5,4
+"Schweizerische Ärztegesellschaft für Manuelle Medizin",FALSE,FALSE,84858,22,16
+"SEVHep Swiss Experts in Viral Hepatitis",FALSE,FALSE,81000,4,4
+"Schweizerische Psoriasis und Vitiligo Gesellschaft",FALSE,FALSE,80136.651944,17,7
+"Schweizerische Gesellschaft für Nephrologie",FALSE,FALSE,79200,5,5
+"Solothurner Spitäler AG",TRUE,FALSE,74535,38,21
+"European Society Dermatological Research",FALSE,TRUE,74138.63,3,3
+"Medizin Medien",FALSE,FALSE,73525,1,1
+"Hopital ophtalmique Jules-Gonin",TRUE,FALSE,71578,4,3
+"Schweizerische Gesellschaft für Pneumologie",FALSE,FALSE,69878.93,7,7
+"ProRaris & Mitgliederorganisationen",FALSE,FALSE,67400,5,3
+"Stiftung für Patientensicherheit in der Anästhesie",FALSE,FALSE,62896,9,3
+"Schweizerische Gesellschaft für Cystische Fibrose",FALSE,FALSE,62282.78,13,5
+"AIDS-Hilfe Schweiz & Mitgliederorganisationen",FALSE,FALSE,61323.11,9,2
+"Haematology Nurses & Healthcare Professionals Group Hnhcp",FALSE,FALSE,60500,7,7
+"SGPP Schweizerische Gesellschaft für Psychiatrie und Psychotherapie",FALSE,FALSE,59940,2,2
+"Gruppo Medico Formazione",FALSE,FALSE,59100,18,17
+"Vereinigung Zürcher Internisten",FALSE,FALSE,59096,14,13
+"Hôpital du Jura",TRUE,FALSE,58883,20,14
+"Schweizerische Morbus Crohn und Colitis ulcerosa Vereinigung",FALSE,FALSE,57868.01,6,5
+"Schweizerische Gesellschaft für Hämatologie",FALSE,FALSE,57500,9,9
+"FMDH Fondation pour les maladies digestives",FALSE,FALSE,55000,1,1
+"Stiftung Repronatal",FALSE,FALSE,54600,2,2
+"dr-ouwerkerk ag - just-medical!",FALSE,FALSE,53832,1,1
+"FoROMe Formation Romande en Oncologie Médicale",FALSE,FALSE,52750,9,9
+"Médecins de Famille GE",FALSE,FALSE,52000,15,13
+"SGV/SSMC  Schweiz.  Gesellschaft",FALSE,FALSE,51416.7,3,3
+"Blutspende SRK Schweiz AG",FALSE,FALSE,50800,5,4
+"Schweizerische Gesellschaft für Angst und Depression",FALSE,FALSE,50617,6,6
+"Kantonsspital Baden AG",TRUE,FALSE,49871.17,16,11
+"Spital Schwyz",TRUE,FALSE,49663.66,13,12
+"Fondazione Epatocentro Ticino",FALSE,FALSE,49565.2,5,5
+"Jeffrey Modell Foundation New York",FALSE,FALSE,48370,1,1
+"SSMO SSOM SGMO",FALSE,FALSE,48060,8,8
+"PEZZ Pädiatrisch-Endokrinologisches Zentrum Zürich",FALSE,FALSE,48000,1,1
+"Schweizerische Gesellschaft zum Studium des Schmerzes",FALSE,FALSE,48000,5,5
+"RCC Net",FALSE,FALSE,47500,3,3
+"LUCE - Lung Cancer Europe",FALSE,TRUE,46613,3,3
+"HARESO – Hausärzte Region Solothurn AG",FALSE,FALSE,46400,4,4
+"SONAR Gruppe",FALSE,FALSE,46160,2,2
+"BBS Congress GmbH",FALSE,FALSE,46133.95,5,4
+"SFK - Stiftung zur Förderung der Knochenmarktransplantation",FALSE,FALSE,44112.8099964,6,2
+"Ärztezentrum Täfernhof",FALSE,FALSE,43213,4,4
+"PizolCare AG",FALSE,FALSE,43100,8,8
+"Fondation pour le Progrès en Microbiologie Médicale et Maladies Infectieuses (FAMMID)",FALSE,FALSE,42400,4,4
+"Ärztekongress Arosa",FALSE,FALSE,41790.2,7,7
+"Positivrat Schweiz",FALSE,FALSE,41725.16622,7,4
+"palliative ch, Schweizerische Gesellschaft für Palliative Medizin, Pflege und Begleitung",FALSE,FALSE,41000,12,4
+"Geschäftsstelle beodocs",FALSE,FALSE,40000,7,7
+"GIST-Gruppe Schweiz",FALSE,FALSE,40000,3,3
+"Schweizerische Gesellschaft für Pädiatrie",FALSE,FALSE,39856,6,6
+"Stiftung Prostatakrebsforschung",FALSE,FALSE,37600,2,2
+"Sanacare AG",FALSE,FALSE,35911,2,2
+"Spitalzentrum Biel AG",TRUE,FALSE,35533.85,13,13
+"Kinderärzte Schweiz",FALSE,FALSE,34920,9,9
+"Schweizerische Gesellschaft für Allgemeinmedizin (SGAM)",FALSE,FALSE,34300.8,1,1
+"S. Grasso Consulting",FALSE,FALSE,33780,6,6
+"DOXnet Ärztenetzwerk Bern Nord/West",FALSE,FALSE,33300,18,16
+"Hôpital du Jura Bernois SA",TRUE,FALSE,33292,12,12
+"LGID Foundation Liver & Gastrointest. Disease Foundation",FALSE,FALSE,31778,3,3
+"Fondation Pour Le Développement De La Médecine Interne En Europe",FALSE,TRUE,31028.33,1,1
+"Clienia Schlössli AG",FALSE,FALSE,30768,1,1
+"Spital Lachen AG",TRUE,FALSE,30752,9,7
+"Privatklinikgruppe Genolier Swiss Medical Network",TRUE,FALSE,30617.61,16,11
+"Spitalregion Fürstenland Toggenburg",TRUE,FALSE,30347.5,12,10
+"Psychiatrische Dienste Aargau AG",TRUE,FALSE,30121,11,8
+"CardioVasc Schweiz AG",FALSE,FALSE,30000,1,1
+"Fondation F.A.B.E.R.",FALSE,FALSE,30000,1,1
+"Stiftung zur Förderung der Medizin im Engadin",FALSE,FALSE,30000,3,3
+"Société Vaudoise de Médecine",FALSE,FALSE,29667,7,6
+"REMED. Association de medecins genevois",FALSE,FALSE,29500,10,10
+"Schweizerischer Verband Medizinischer Praxis Assistentinnen",FALSE,FALSE,29480,15,10
+"Schweizerische Patientenorganisation für Lymphombetroffene und Angehörige",FALSE,FALSE,29348.577442212,9,8
+"Ärtzenetzwerk Igomed",FALSE,FALSE,29016,8,7
+"Retina, International",FALSE,TRUE,28831.5,2,1
+"Fondation fribourgeoise pour la recherche et la formation sur le cancer",FALSE,FALSE,28500,7,6
+"Fondation USCADE",FALSE,FALSE,28500,3,3
+"Swiss Eye Institute AG",FALSE,FALSE,28044,2,2
+"Ärztenetzwerk Grauholz",FALSE,FALSE,28000,12,12
+"Kardiologische Gemeinschaftspra xis AG",FALSE,FALSE,28000,4,4
+"Grisomed (Ärztenetzwerk Graubünden)",FALSE,FALSE,27800,2,2
+"GZO Spital Wetzikon",TRUE,FALSE,27737.51,10,9
+"Aospine Foundation",FALSE,FALSE,27600,1,1
+"Psorinet Kompetenznetz Psoriasis Niedergelassener Dermatologen Schweiz",FALSE,FALSE,27500,3,3
+"Ordine dei medici del Canton Ticino",FALSE,FALSE,26849,12,12
+"SGC/SSC-Gesellschaft für Chirurgie",FALSE,FALSE,25990,2,2
+"Psychiatrie Baselland",TRUE,FALSE,25940,9,7
+"Stiftung für die Forschung in der Gastroenterologie und Hepatologie",FALSE,FALSE,25500,4,4
+"Myelom Kontaktgruppe Schweiz",FALSE,FALSE,25495.310797,6,4
+"Forum Managed Care",FALSE,FALSE,25140,4,4
+"Centre de Chimiothérapie CCAC SA",FALSE,FALSE,24500,17,15
+"Schweizerischer Transplantierten Verein",FALSE,FALSE,24500,4,2
+"Medworld AG",FALSE,FALSE,23920,1,1
+"dynamische Kurzpsychotherapie atelierPsy&Psy",FALSE,FALSE,23919,8,7
+"Circolo medico di Locarno",FALSE,FALSE,23500,13,13
+"Associazione Mendrisio Medical Meeting",FALSE,FALSE,23400,10,10
+"Société Neuchâteloise de Médecine",FALSE,FALSE,23314.82,8,8
+"Centre neuchâtelois de psychiatrie",FALSE,FALSE,23175,6,6
+"St. Claraspital AG",TRUE,FALSE,22755.6,9,6
+"Hôpital Riviera Chablais Vd-Vs",TRUE,FALSE,22751,9,8
+"swiss orthopaedics",FALSE,FALSE,22668,1,1
+"Hausärztlicher Qualitätszirkel",FALSE,FALSE,22560,8,5
+"Ensemble Hospitalier de la Côte",TRUE,FALSE,21890,14,12
+"Mediworld AG (Medidays)",FALSE,FALSE,21710,4,3
+"Kollegium Brustkrebs",FALSE,FALSE,21600,1,1
+"Zmed Zürcher Aerzte Gemeinschaft AG",FALSE,FALSE,21600,1,1
+"VLUHA ""Vereinigung Luzerner Hausärzte""",FALSE,FALSE,21385,6,3
+"Pallas Kliniken AG Augen + Augenlaser",TRUE,FALSE,21000,1,1
+"Schweizerisches Institut für Klein- und Mittelunternehmen",FALSE,FALSE,21000,1,1
+"Ärzteverein Werdenberg/Sargans",FALSE,FALSE,20448,13,12
+"See-Spital Standort Horgen",TRUE,FALSE,20285.85,16,15
+"Schweizerische Gesellschaft für Blasenschwäche",FALSE,FALSE,20281,1,1
+"Bethesda Spital AG",TRUE,FALSE,20176,10,10
+"Hôpital de Zone de Nyon - GHOL",TRUE,FALSE,20146,11,7
+"Fondazione Cardiocentro Ticino",FALSE,FALSE,20089,8,8
+"Kantonsspital Nidwalden",TRUE,FALSE,20060.13,6,5
+"Ärztegesellschaft des Kantons Zug",FALSE,FALSE,20000,3,3
+"Notfallkreis Sissach/Gelterkinden",FALSE,FALSE,20000,3,3
+"SAMMSU Swiss Association for the medical Management in Substance Users",FALSE,FALSE,20000,1,1
+"Medipress Medical Publishing GmbH",FALSE,FALSE,19714.29,1,1
+"Axantus Sàrl",FALSE,FALSE,19600,1,1
+"Stiftung für Parkinsonforschung",FALSE,FALSE,19500,3,3
+"Réseau Fribourgeois de Santé Mentale",TRUE,FALSE,19411,10,8
+"Parkinson Schweiz",FALSE,FALSE,18957.05,6,2
+"Lindenhof AG",TRUE,FALSE,18567,11,11
+"Clinique de Carouge SA",TRUE,FALSE,18561,8,8
+"Spital Limmattal",TRUE,FALSE,17647.25,6,6
+"Forum Suchtmedizin Innerschweiz",FALSE,FALSE,17500,6,3
+"Schweizer Paraplegiker Zentrum",FALSE,FALSE,17264,9,7
+"ADR-AC GmbH",FALSE,FALSE,17100,1,1
+"Clinica Luganese Moncucco SA",TRUE,FALSE,16880,7,7
+"CMCB Centre Médico-Chirurgical",FALSE,FALSE,16400,7,7
+"EPDA
+European Parkinson Disease¹s Association",FALSE,TRUE,16398.9,1,1
+"GAFFI",FALSE,FALSE,15829,1,1
+"ESRA - The European Society of Regional Anaesthesia & Pain Therapy",FALSE,TRUE,15696,1,1
+"Collegium Internationale Neuro-Psychopharmacologicum (CINP)",FALSE,TRUE,15689,1,1
+"Alternative Communication",FALSE,FALSE,15600,4,4
+"Europa Donna",FALSE,TRUE,15590.2693896,4,3
+"Centrale d'appel Lausanne",FALSE,FALSE,15518,1,1
+"Sanatorium Kilchberg AG",FALSE,FALSE,15507,5,5
+"Hôpital Intercantonal de la Broye",TRUE,FALSE,15153.75,7,6
+"Clinique romande de réadaptation",TRUE,FALSE,15120,5,5
+"Ärztenetzwerk Bantiger",FALSE,FALSE,15000,6,6
+"fabrysuisse",FALSE,FALSE,15000,1,1
+"kispex Kinder-Spitex Kanton Zürich",FALSE,FALSE,15000,1,1
+"Rheumasearch Foundation",FALSE,FALSE,15000,2,2
+"Schweizerische Muskelgesellschaft",FALSE,FALSE,15000,1,1
+"SGR-SSR",FALSE,FALSE,15000,1,1
+"Swiss TSC Network Geschäftsstelle: Pro Medicus GmbH Frau Iris Wallimann",FALSE,FALSE,15000,1,1
+"Spital Zweisimmen",TRUE,FALSE,14758,8,8
+"Schweiz. Gesellschaft für Neuropädiatrie Geschäftsstelle SGNP Herr Prof. P. Weber",FALSE,FALSE,14750,1,1
+"Spital Grabs",TRUE,FALSE,14490,2,2
+"Medizinischer Verein vom Linthgebiet",FALSE,FALSE,14300,7,6
+"Associazione medici anestesisti canton Ticino",FALSE,FALSE,14015,6,5
+"Société Suisse d’Endocrinologie et Diabétologie Pédiatriques",FALSE,FALSE,14000,2,2
+"Oncologia Varini Calderoni Christinat Bianchi Via Fogazzaro 3 Lugano",FALSE,FALSE,13980,1,1
+"Luzerner Psychiatrie",TRUE,FALSE,13964,9,6
+"Swiss Society of Neonatology",FALSE,FALSE,13720,2,2
+"Schweizerische Gesellschaft für Herz- und thorakale Gefässchirurge (SGHC)",FALSE,FALSE,13708,3,3
+"SGKN -
+ Schweizerische Gesellschaft für klinische Neurophysiologie",FALSE,FALSE,13500,2,2
+"Kenes International",FALSE,TRUE,13092,1,1
+"Klinik Bethesda",TRUE,FALSE,13079,5,5
+"Apprendre a vivre avec le cancer",FALSE,FALSE,13000,2,2
+"Reha Rheinfelden",TRUE,FALSE,12977.77,7,7
+"Swiss Association for the Study of the Liver",FALSE,FALSE,12888,2,2
+"Kids Kidney Care",FALSE,FALSE,12680,4,4
+"Impulze GmbH",FALSE,FALSE,12520,2,2
+"adhs20+ Kontaktstelle für Erwachsene",FALSE,FALSE,12500,1,1
+"Bündner Oberländer Ärzteverein",FALSE,FALSE,12500,5,4
+"Verband Schweizer Assistenz- und Oberärzt/Innen",FALSE,FALSE,12500,1,1
+"IPW - Psychiatrie-Zentrum Hard",FALSE,FALSE,12463,8,5
+"Stiftung Theodora",FALSE,FALSE,12080,2,2
+"Réseau Santé Balcon du Jura.vd",FALSE,FALSE,12046,8,8
+"Dermatologische Gesellschaft",FALSE,FALSE,12000,5,5
+"English Speaking Cancer Association",FALSE,FALSE,12000,2,2
+"Gesellschaft der Aerzte des Zürcher Oberlandes AGZO",FALSE,FALSE,12000,2,2
+"Spitex-Förderver ein
+ Allschwil-Schöne nbuch + Binningen",FALSE,FALSE,12000,1,1
+"Gastrointestinales Tumorzentrum",FALSE,FALSE,11800,1,1
+"notfallTraining Schweiz GmbH",FALSE,FALSE,11550,1,1
+"Association D'Aesculape en Lavaux",FALSE,FALSE,11500,6,6
+"Brustzentrum Regio Basiliensis",FALSE,FALSE,11500,3,3
+"Hôpital des Trois Chênes",TRUE,FALSE,11500,2,2
+"Spital Menziken Asana Gruppe AG",TRUE,FALSE,11340,3,3
+"Spital Herisau",TRUE,FALSE,11097.78,13,11
+"Schweizerische Herzrhythmus Stiftung SHRS",FALSE,FALSE,11000,2,2
+"Staatsverein",FALSE,FALSE,11000,3,1
+"Stiftung WHM",FALSE,FALSE,11000,1,1
+"Verein GUCH Schweiz",FALSE,FALSE,10944,2,2
+"Groupe Médicine & Hygiène",FALSE,FALSE,10816,4,4
+"Circolo medico del Bellinzonese",FALSE,FALSE,10800,7,7
+"LH Medical Management GmbH",FALSE,FALSE,10740,3,3
+"Clinique Le Noirmont",TRUE,FALSE,10532,8,8
+"Clinique de la Source",TRUE,FALSE,10500,5,5
+"Société Vaudoise de Pharmacie",FALSE,FALSE,10500,4,4
+"Etop",FALSE,FALSE,10443.57,1,1
+"SGORL Swiss Society of ORL Head and Neck Surgery",FALSE,FALSE,10400,2,2
+"EuropaColon",FALSE,TRUE,10385.97,1,1
+"Kantonsspital Schaffhausen",TRUE,FALSE,10289,4,4
+"SVMTRA",FALSE,FALSE,10186,1,1
+"Klinik Valens",TRUE,FALSE,10098,5,5
+"Ärzte am Rhein AG",FALSE,FALSE,10000,7,7
+"AVKZ Apothekerverband des Kantons Zürich",FALSE,FALSE,10000,2,1
+"Dr. Sexual Health Ärzte für sexuelle Gesundheit",FALSE,FALSE,10000,1,1
+"Endometriose Vereinigung Schweiz",FALSE,FALSE,10000,1,1
+"Fachgesellschaft",FALSE,FALSE,10000,1,1
+"Groupement des psychiatres et psychothérapeutes Vaudois",FALSE,FALSE,10000,2,2
+"Hausarztzentrum Gersaq",FALSE,FALSE,10000,1,1
+"Institute of Pharmaceutical Medicine (ECPM)",FALSE,FALSE,10000,2,1
+"Kantonale Ärztegesellschaft Schaffhausen",FALSE,FALSE,10000,3,3
+"Praxisklinik Binningen",TRUE,FALSE,10000,3,3
+"QualiCCare",FALSE,FALSE,10000,1,1
+"Spital Linth",TRUE,FALSE,10000,4,4
+"St. Gallische Kantonale Psychiatrische Dienste – Sektor Nord",TRUE,FALSE,10000,5,3
+"Stiftung für krebskranke Kinder",FALSE,FALSE,10000,1,1
+"Vereinigung Cerebral Basel",FALSE,FALSE,10000,1,1
+"EUROTOX -Association of European Toxicologists and European Societies of Toxicology",FALSE,TRUE,9869,1,1
+"APSI Associazione Pediatri della Svizzera Italiana",FALSE,FALSE,9540,3,3
+"Association Romande des Assistantes Médicales",FALSE,FALSE,9500,6,5
+"Cansearch: Fondation contre le cancer de l'enfant",FALSE,FALSE,9500,3,3
+"Lenker Woche",FALSE,FALSE,9500,4,4
+"Verein zur Förderung",FALSE,FALSE,9500,2,1
+"International Alliance For Biological Standardization",FALSE,TRUE,9482.9,1,1
+"pharmActuel Zentralschweiz",FALSE,FALSE,9400,6,4
+"Eastcare AG",FALSE,FALSE,9353,2,1
+"Psychiatriezentrum Münsingen PZM",TRUE,FALSE,9267,6,6
+"Fondation Rhumatisme Enfants Suisse",FALSE,FALSE,9000,3,3
+"Réseau des Pédiatres Genevois",FALSE,FALSE,9000,1,1
+"Vistaklinik",TRUE,FALSE,9000,2,2
+"Groupement des pneumologues genevois",FALSE,FALSE,8851.85,5,5
+"Luzerner Höhenklinik Montana",TRUE,FALSE,8740,4,4
+"H+ Die Spitäler der Schweiz Verband Spital",TRUE,FALSE,8580,2,2
+"Ärztegesellschaft Gäu",FALSE,FALSE,8500,5,5
+"Ärztenetzwerk Gesundes Rheintal",FALSE,FALSE,8500,3,3
+"Clinica psichiatrica cantonale",TRUE,FALSE,8500,4,4
+"Movember Europe",FALSE,TRUE,8500,1,1
+"Schweizerische Parkinsonvereinigung",FALSE,FALSE,8500,2,2
+"SSBP Swiss Society of Biological Psychiatry",FALSE,FALSE,8500,2,2
+"Kantonsspital Glarus",TRUE,FALSE,8400,8,6
+"Organizers Schweiz GmbH",FALSE,FALSE,8370,1,1
+"CRR SuvaCare / Clinique romande de réadaptation",TRUE,FALSE,8277.9,6,6
+"Hôpital de Chamblon(CHYC/eHnv)",TRUE,FALSE,8255,4,4
+"Augenzentrum Bahnhof Basel",FALSE,FALSE,8000,1,1
+"Mednet Bern AG",FALSE,FALSE,8000,1,1
+"Oberwalliser Ärztegesellschaft",FALSE,FALSE,8000,4,4
+"Schweizerische Gesellschaft für Pathologie",FALSE,FALSE,8000,2,2
+"Schweiz. Vereinig. Gegen die Osteoporose/Assoc. Suisse contre l'Ostéoporose",FALSE,FALSE,8000,2,2
+"Swiss Paediatric Oncology Group",FALSE,FALSE,8000,1,1
+"SwissPKD",FALSE,FALSE,8000,1,1
+"Äquilibirs Seminare AG",FALSE,FALSE,7900,2,2
+"Blueye Vision Tech GmbH",FALSE,FALSE,7872,2,2
+"Regionalspital Emmental AG",TRUE,FALSE,7792,4,3
+"medswiss.net",FALSE,FALSE,7600,2,2
+"Clinique Generale-Beaulieu",TRUE,FALSE,7500,4,4
+"E-HealthSolutions GmbH",FALSE,FALSE,7500,2,2
+"LT3 Suisse Sagl",FALSE,FALSE,7500,1,1
+"Schweizerische Interessengruppe für Diabetesfachberatung",FALSE,FALSE,7500,2,2
+"Swiss ICU Network",FALSE,FALSE,7500,2,2
+"Swiss Society for Interventional Pain Management",FALSE,FALSE,7500,1,1
+"Healthworld",FALSE,FALSE,7456,2,2
+"Groupe Médical D'Onex Sa",TRUE,FALSE,7385,5,5
+"Ärzteverband Bezirk Zofingen",FALSE,FALSE,7314,5,5
+"Paracelsus-Spital Richterswil",TRUE,FALSE,7254.6,3,3
+"Aerztegesellschaft Thurgau Sekretariat",FALSE,FALSE,7000,1,1
+"Europa Uomo Schweiz",FALSE,TRUE,7000,2,2
+"Groupement des Neurologues",FALSE,FALSE,7000,2,2
+"INetz",FALSE,FALSE,7000,1,1
+"Medinform",FALSE,FALSE,7000,2,2
+"Stiftung Urologische Forschung",FALSE,FALSE,7000,1,1
+"Profecta AG",FALSE,FALSE,6800,1,1
+"Journée de Gériatrie de Chaumont",FALSE,FALSE,6700,1,1
+"Davos Congress",FALSE,FALSE,6690,2,2
+"Junge Hausärztinnen und -ärzte (JHaS)",FALSE,FALSE,6656,2,2
+"Universite de Neuchatel",TRUE,FALSE,6633,1,1
+"Fondation pour la recherche en Hypertension",FALSE,FALSE,6600,2,2
+"Unione Farmaceutica Distrib. SA",FALSE,FALSE,6600,2,2
+"Aerztevereinigun g Sensebezirk",FALSE,FALSE,6500,3,3
+"VGZ Verein Gastroenterologie Zürich",FALSE,FALSE,6500,3,3
+"Klinik Barmelweid AG",TRUE,FALSE,6475,3,3
+"AarReha Schinznach",FALSE,FALSE,6122,6,6
+"Appenzellische Ärztegesellschaft",FALSE,FALSE,6000,3,3
+"Ärztenetzwerk Oberaargau",FALSE,FALSE,6000,1,1
+"Ärztenetzwerk Oberes Emmental",FALSE,FALSE,6000,3,3
+"ASI-ADOC",FALSE,FALSE,6000,5,5
+"Assoatatwn ‘Joumee Jurassienne de Medecine’",FALSE,FALSE,6000,3,3
+"Churer Ärzteverein",FALSE,FALSE,6000,5,5
+"Schweizerische Gesellschaft für Psychoonkologie",FALSE,FALSE,6000,3,3
+"SSCLP_Sté Suisse de Psychiatrie de Consultation-Liaison",FALSE,FALSE,6000,2,2
+"Stiftung Tox Info Suisse",FALSE,FALSE,6000,1,1
+"Swiss Transplantation Society",FALSE,FALSE,6000,2,2
+"Tumor- und Brustzentrum ZeTuP",FALSE,FALSE,5981,2,2
+"Brust-Zentrum",FALSE,FALSE,5900,2,2
+"INHSU",FALSE,FALSE,5858,1,1
+"Associazione Discorsi Relazionali (DiRe)",FALSE,FALSE,5800,5,5
+"Neurozentrum Bellevue",FALSE,FALSE,5800,2,2
+"Associazione Medici Internisti Ticinesi (AMITI)",FALSE,FALSE,5750,7,7
+"KMS Kongress Management Swiss",FALSE,FALSE,5744,2,2
+"Associazione Proprietari di Farmacie del Canton Ticino",FALSE,FALSE,5556,2,1
+"Davos Destinations-Organisation",FALSE,FALSE,5540,1,1
+"Aesculap Akademie",FALSE,FALSE,5500,2,2
+"Schweizerische Akademie der Pharmazeutischen Wissenschaften",FALSE,FALSE,5500,3,3
+"Stiftung Förder. Ausb. med. Rad.",FALSE,FALSE,5500,1,1
+"GRIMM ""Groupement de medecins valaisans""",FALSE,FALSE,5400,2,2
+"IFFM - Institut für Forschung und Fortbildung in der Medizin",FALSE,FALSE,5400,3,3
+"Kardiologie Plus GmbH",FALSE,FALSE,5400,1,1
+"Centro Pediatrico del Mendrisiotto",FALSE,FALSE,5330,5,5
+"Associazione Ticinese Assistenti di Studio Medico",FALSE,FALSE,5300,3,3
+"Associazione Triangolo",FALSE,FALSE,5300,3,3
+"Clinique Genevoise de Montana",TRUE,FALSE,5266,1,1
+"SwissPedNet",FALSE,FALSE,5223,1,1
+"Klinik Schützen",TRUE,FALSE,5200,2,2
+"Stiftung ToGo opening eyes",FALSE,FALSE,5150,2,2
+"Intervisionsgruppe Dr. Fritz Ramseier",FALSE,FALSE,5100,2,2
+"Cardiologie Pediat rique§ schweizeris che Gesellschaft f ür Pädiatrische Ka rdiologie",FALSE,FALSE,5092.59,1,1
+"Aerztenetzwerk Bern",FALSE,FALSE,5000,1,1
+"Ärztezentrum Jegenstorf",FALSE,FALSE,5000,1,1
+"Ärztezentrum Oberdiessbach",FALSE,FALSE,5000,1,1
+"Association Zoé 4 life",FALSE,FALSE,5000,1,1
+"Diabetes Adipositas Zentrum Zürich DAZZ",FALSE,FALSE,5000,1,1
+"EPFL - Ccole polytechnique f£d6rale de Lausanne PRES",FALSE,FALSE,5000,1,1
+"Equilibrium",FALSE,FALSE,5000,1,1
+"Fondation Action Madagascar",FALSE,FALSE,5000,1,1
+"Fondation Francine Delacrétaz",FALSE,FALSE,5000,1,1
+"Fondazione Di Ricerca Psicooncologica",FALSE,FALSE,5000,1,1
+"Gruppenpraxis Spiez, Seestrasse 30",FALSE,FALSE,5000,1,1
+"Hausärzteverein Doccare",FALSE,FALSE,5000,1,1
+"KSiA – Kompetenzzentrum für Sehbehinderung im Alter",FALSE,FALSE,5000,1,1
+"onko.geriatrie",FALSE,FALSE,5000,1,1
+"PraxaMed, Ärztezentrum Attiswil-Wiedlisbach",FALSE,FALSE,5000,1,1
+"Praxis Dr. Schöpf Josef",FALSE,FALSE,5000,1,1
+"Regionalspital Surselva AG",TRUE,FALSE,5000,3,3
+"Rheumakränzli Zentralschweiz",FALSE,FALSE,5000,5,5
+"RhyMed",FALSE,FALSE,5000,1,1
+"Sce Des Maladies Osseuses",FALSE,FALSE,5000,1,1
+"Schweizerische Liga gegen Epilepsie",FALSE,FALSE,5000,1,1
+"Second Chance Association",FALSE,TRUE,5000,1,1
+"Société Suisse de Psychiatrie Biologique",FALSE,FALSE,5000,2,2
+"Songe Symposium",FALSE,FALSE,5000,3,3
+"Stiftung Für Menschen Mit Seltenen Krankheiten",FALSE,FALSE,5000,1,1
+"Univ. della Svizzera italiana",TRUE,FALSE,5000,2,2
+"VEDAG (Verband deutschschweizerischer Ärztegesellschaften)",FALSE,FALSE,5000,1,1
+"Spital Männedorf AG",TRUE,FALSE,4900,3,3
+"Groupe régional des Infirmiers-Anesthésistes Latins (GIAL)",FALSE,FALSE,4840,3,3
+"Spital Region Oberaargau",TRUE,FALSE,4826.7,6,6
+"Schweizerische Gesellschaft für familiäre Hypercholesterinämie",FALSE,FALSE,4800,1,1
+"Circolo di Qualità",FALSE,FALSE,4700,6,5
+"MEDA Pharma GmbH",FALSE,FALSE,4695.85,1,1
+"RELIABLE CANCER THERAPIES",FALSE,FALSE,4540,2,1
+"AGFAM Arbeitsgemeinschaft Fortbildung für Apotheken- Mitarbeiter",FALSE,FALSE,4500,1,1
+"Ärztegesellschaft Luzern",FALSE,FALSE,4500,2,2
+"Schweizerische Pankreasstiftung",FALSE,FALSE,4500,1,1
+"Spital Bülach",TRUE,FALSE,4450,4,4
+"Helbling Consulting And Research",FALSE,FALSE,4442.25,3,2
+"Centre Médical de Vidy",FALSE,FALSE,4302,1,1
+"Pierre Michetti (Academic)",FALSE,FALSE,4200,1,1
+"Schweizerische Adipositas-Stiftung SAPS",FALSE,FALSE,4107.01,2,2
+"Fortbildungsgruppe Adler",FALSE,FALSE,4100,4,4
+"Società Ultrasonologia Medica Svizzera Italiana",FALSE,FALSE,4085,5,5
+"Ostschweizer Kinderspital",TRUE,FALSE,4047,2,2
+"Cabinet de groupe Genève, Viollier Weintraub SA",FALSE,FALSE,4000,1,1
+"Cancerdrugs",FALSE,FALSE,4000,2,2
+"Equipage-UTC",FALSE,FALSE,4000,2,2
+"Gastro Praxis Chur Dr. Zala Gianfranco / Dr. Werth Baseli",FALSE,FALSE,4000,1,1
+"Groupement des medecins du sud fribourgeois",FALSE,FALSE,4000,2,2
+"Hôpital du Pays d'Enhaut",TRUE,FALSE,4000,3,3
+"Institut für morphologische Diagnostik Zum Regenbogen AG Konstanzerstrasse 27 Kreuzlingen",FALSE,FALSE,4000,1,1
+"Löwenpraxis",FALSE,FALSE,4000,2,2
+"mmconsult volante GmbH",FALSE,FALSE,4000,1,1
+"SGG Schweizeris che Gesellschaft f ür Gefässchirurgie",FALSE,FALSE,4000,1,1
+"Spital Davos",TRUE,FALSE,4000,2,2
+"Swissendos Fribourg",FALSE,FALSE,4000,1,1
+"Swiss Expert Network on Burnout",FALSE,FALSE,4000,2,2
+"Swisstransplant",FALSE,FALSE,4000,1,1
+"Swiss Tumor Board",TRUE,FALSE,4000,1,1
+"Vba Vereinigung Bernischer Anästhesiologen",FALSE,FALSE,4000,3,3
+"Gesundheitszentrum Fricktal AG",TRUE,FALSE,3800,4,4
+"SMGP Schweiz. Medizinische Gesellschaft für Phytotherapie",FALSE,FALSE,3800,1,1
+"Pill Group AG",FALSE,FALSE,3780,1,1
+"Circolo medico di qualità Pardomed",FALSE,FALSE,3750,5,5
+"Cabinet Dr Claeys Michel",FALSE,FALSE,3703.7,1,1
+"Vereinigung der Zürcher Kinderärzte VZK",FALSE,FALSE,3700,3,3
+"Schweizerische Blinden-­‐ und Sehbehindertenverband",FALSE,FALSE,3650,1,1
+"Swiss Association of Pharmaceutical - Professionals SwAPP",FALSE,FALSE,3650,3,3
+"ESPD Summerschool 2015 c/o MCI Suisse SA",FALSE,FALSE,3630,1,1
+"Schw. Arbeitsgr. für Kolo-Rekto-Proktologie",FALSE,FALSE,3600,2,2
+"Société Suisse de Chirurgie plastique reconstructive et esthétique",FALSE,FALSE,3600,1,1
+"Université de Fribourg",TRUE,FALSE,3600,2,2
+"Swiss MD-PhD Association (SMPA) c/o Atanas Todorov",FALSE,FALSE,3586,1,1
+"Schweizer Selbshilfegruppe für Krankheiten der Hypophyse (Wegweiser)",FALSE,FALSE,3523,1,1
+"Arbeitsgemeinschaft für Gynäkologische Endoskopie",FALSE,FALSE,3500,1,1
+"Centre Medical de Gland",FALSE,FALSE,3500,1,1
+"Centre Medical de Renens",FALSE,FALSE,3500,1,1
+"ECO, Gruppo Regionale ticinese di Ecocardiografia",FALSE,FALSE,3500,1,1
+"Gruppo di qualilä di Viganello",FALSE,FALSE,3500,1,1
+"Spitalregion Rheinland-Werdenberg-Sarganserland",TRUE,FALSE,3500,2,2
+"Swiss Cancer Congress",FALSE,FALSE,3500,1,1
+"Tox Info Suisse",FALSE,FALSE,3500,4,4
+"SGP - Schweizerische Gesellschaft für Phlebologie c/o Meister ConCept GmbH",FALSE,FALSE,3420,1,1
+"Ebmt Swiss Nurses Working Group",FALSE,TRUE,3400,2,2
+"FONDATION RECHERCHE ET FORMATION DESG",FALSE,FALSE,3300,1,1
+"Velke GmbH",FALSE,FALSE,3300,1,1
+"VKBD Verein Kantonaler Bernischer Dermatologen",FALSE,FALSE,3300,1,1
+"Fondation Romande pour la recherche sur le diabète",FALSE,FALSE,3250,2,2
+"Groupement des Médecins des Franches-Montagnes",FALSE,FALSE,3250,4,4
+"Rehaklinik Zihlschlacht AG",TRUE,FALSE,3241,1,1
+"European Academy of Paediatrics (EAP)",FALSE,TRUE,3240.88,1,1
+"CAP Club Pharmaciens animateurs de Suisse",FALSE,FALSE,3240,1,1
+"Rheumapraxis Sursee",FALSE,FALSE,3240,1,1
+"SeelandNet",FALSE,FALSE,3240,1,1
+"Praxis TUCARE",FALSE,FALSE,3213,4,4
+"Stadtspital Waid",TRUE,FALSE,3204,3,3
+"Circolo di Qualitä ""Campagna Adorna""",FALSE,FALSE,3100,3,3
+"STAI Società ticinese di allergologia e immunologia clinica",FALSE,FALSE,3050,5,5
+"Magen Darm Liga",FALSE,FALSE,3000.01,1,1
+"Alters- und Pflegeheim Allmend",FALSE,FALSE,3000,1,1
+"ARFMPP Association romande de formation en médecine psychosomatique et psychosociale",FALSE,FALSE,3000,2,2
+"Ärztegesellschaf t des Kantons Luzern",FALSE,FALSE,3000,1,1
+"Ärzte-Gesellschaft des Kantons Zug",FALSE,FALSE,3000,1,1
+"Association FIMB",FALSE,FALSE,3000,2,2
+"Association par les Médecins, pour les Médecins",FALSE,FALSE,3000,1,1
+"Assoc. Rencontres cardiologiques",FALSE,FALSE,3000,1,1
+"Buendner Oberlaender Aerzteverein Präsident: Dr. med. Gian BundiArzthaus",FALSE,FALSE,3000,1,1
+"Diagene Gmbh",FALSE,FALSE,3000,1,1
+"Gehirn- und Traumastiftung Graubünden/Sch weiz",FALSE,FALSE,3000,1,1
+"Gruppenpraxis Basel, Föhrenstr. 2/Koechlin/Spoendlin",FALSE,FALSE,3000,1,1
+"Hausarztforum Uzwil",FALSE,FALSE,3000,2,2
+"Institution de Lavigny",FALSE,FALSE,3000,3,3
+"Kongress Herzrhythmus-Störungen Lenzburg",FALSE,FALSE,3000,1,1
+"Magendarmliga Schweiz",FALSE,FALSE,3000,1,1
+"Operationszentrum Burgdorf AG",FALSE,FALSE,3000,2,2
+"Privatklinik Hohenegg",TRUE,FALSE,3000,1,1
+"Psicosomatica e Psicosociale",FALSE,FALSE,3000,2,2
+"Réseau Cancer du Sein",FALSE,FALSE,3000,1,1
+"Schweizerische Gesellschaft für Medizincontrolling SwissDRG",FALSE,FALSE,3000,1,1
+"Societä Ticinese di Psichiatria e Psicoterapia STPP",FALSE,FALSE,3000,2,2
+"Tumorzentrum Ze TuP",FALSE,FALSE,3000,1,1
+"Vascular International School AG",FALSE,TRUE,3000,1,1
+"Verein Quartierärzte Kreis 9",FALSE,FALSE,3000,3,3
+"zu:care",FALSE,FALSE,3000,1,1
+"Augenzentrum Wil",FALSE,FALSE,2950,2,2
+"SIRMED Schweizer Institut für Rettungsmedizin",FALSE,FALSE,2917,1,1
+"Ärztenetzwerk",FALSE,FALSE,2808,1,1
+"akj Fachverband Adipositas im Kindes- und Jugendalter",FALSE,FALSE,2800,2,2
+"Clinique des Grangettes",TRUE,FALSE,2800,3,3
+"Spital Zofingen AG",TRUE,FALSE,2800,2,2
+"Schweizerische Gesellschaft für Viszeralchirurgie",FALSE,FALSE,2754,1,1
+"FMI- FRIEDRICH MIESCHER INSTITUTE FOR BI",FALSE,FALSE,2750,1,1
+"IG eHealth c/o Köhler,Stüdeli & Partner GmbH",FALSE,FALSE,2750,1,1
+"Centre mödical VIGIMED",FALSE,FALSE,2700,1,1
+"PMSE SA Prévention e Maintien de la santé en entreprise",FALSE,FALSE,2700,1,1
+"Praxis Dr. Weissenrieder Hansjörg",FALSE,FALSE,2700,1,1
+"Senoforum",FALSE,FALSE,2700,1,1
+"Verband Nierenpatienten Schweiz",FALSE,FALSE,2700,1,1
+"Europ.Neuro-opth almologie Society EUNOS c/o Klara Landau, MO Sectretary of EUNOS",FALSE,TRUE,2622,1,1
+"Schweizerische Nierenstiftung",FALSE,FALSE,2620,2,2
+"Bonadea AG",FALSE,FALSE,2592,1,1
+"Checkup Center Zürich AG",FALSE,FALSE,2553,1,1
+"19. Journées Franco-Suisse",FALSE,FALSE,2500,2,2
+"Association Genevoise d'Asthme, d'Immunologie et d'Allergie (AGAIA)",FALSE,FALSE,2500,3,3
+"Dialysezentrum - Nephrologie",FALSE,FALSE,2500,1,1
+"Fondation ProTransplant",FALSE,FALSE,2500,1,1
+"Groupe des rhumatologues genevois",FALSE,FALSE,2500,1,1
+"Ordine dei Farmacisti del Cantone Ticino Lugano / OFCT",FALSE,FALSE,2500,1,1
+"Pathologie Länggasse Gemeinschaftspraxis für Histopathologie",FALSE,FALSE,2500,1,1
+"santemedia ag",FALSE,FALSE,2500,1,1
+"STO Pharmawerbung AG",FALSE,FALSE,2500,1,1
+"TI-PSISO Gruppo regionalde della Società Svizzera di Medicina Psicosomatica e Psicosociale SSMPP",FALSE,FALSE,2500,4,4
+"Verband Breast Care Nurse",FALSE,FALSE,2500,1,1
+"Schweizer Gesellschaft für Pharmakologie und Toxikologie (SSPT)",FALSE,FALSE,2462,3,3
+"Forel Klinik",TRUE,FALSE,2450,1,1
+"Swiss Society of Sexology",FALSE,FALSE,2427,2,2
+"Berner Reha Zentrum AG",FALSE,FALSE,2400,1,1
+"Innovamed",FALSE,FALSE,2400,1,1
+"Interessengemeinschaft Nephrologie Der Deutschen Schweiz",FALSE,FALSE,2400,1,1
+"Schweizerischer Verband der ErnährungsberaterInnen",FALSE,FALSE,2400,1,1
+"HIV-Pract",FALSE,FALSE,2355.2,1,1
+"Schweizerischer Hebammenverband",FALSE,FALSE,2280,1,1
+"Zuger Kantonsspital Ag",TRUE,FALSE,2267.19,2,2
+"Cabinet Dr Tran Sao-Nam",FALSE,FALSE,2267,1,1
+"Centre de Psychiatrie (CPNVD)",FALSE,FALSE,2200,1,1
+"Circolo Medico 3 Valli",FALSE,FALSE,2100,3,3
+"Clinica Santa Chiara SA",TRUE,FALSE,2100,3,3
+"Osteoporosis Center",FALSE,FALSE,2100,1,1
+"Pharmacie Moudonnoise",FALSE,FALSE,2046,2,2
+"ADEL - Association D'Esculape En Lavaux",FALSE,FALSE,2000,1,1
+"AGS Eltern- und Patienteninitiative Schweiz",FALSE,FALSE,2000,1,1
+"APOWAL Verband der Oberwalliser Apotheker/Innen",FALSE,FALSE,2000,1,1
+"Association Francophone de Strabologie et d'Ophtalmologie Pédiatrique (AFSOP)",FALSE,FALSE,2000,1,1
+"Association Groupe Lausanne Nord",FALSE,FALSE,2000,1,1
+"Aurigen SA centre degénétique et pathologie",FALSE,FALSE,2000,1,1
+"Central Apotheke Thun",FALSE,FALSE,2000,1,1
+"Centre Médical de Corcelles",FALSE,FALSE,2000,1,1
+"CENTRE MEDICO-CHIRURGICAL DELA",FALSE,FALSE,2000,1,1
+"Fondation Soigner Ensemble",FALSE,FALSE,2000,1,1
+"Gardes Pédiatriques",FALSE,FALSE,2000,1,1
+"Gemeinschaftspra xis",FALSE,FALSE,2000,1,1
+"GPMR Gesellschaft für physikalische Medizin und Rheumatologie",FALSE,FALSE,2000,1,1
+"Groupe des Medecins Lausanne-Nord",FALSE,FALSE,2000,1,1
+"Groupement Vaudois des Spécialistes en Allergologie et Immunologie Clinique",FALSE,FALSE,2000,2,2
+"Gruppo Medici Malcantonesi",FALSE,FALSE,2000,1,1
+"Hausarztverein Gossau",FALSE,FALSE,2000,2,2
+"Iridis Lausanne S.A.",FALSE,FALSE,2000,1,1
+"Istituto cantonale di patologia Via in Selva 24 Locarno",FALSE,FALSE,2000,1,1
+"Journées jurassiennes d'endocrinologie et diabétologie",FALSE,FALSE,2000,1,1
+"Kantonsspital",TRUE,FALSE,2000,1,1
+"Kinderärztezentrum Villa Vesta GmbH",FALSE,FALSE,2000,1,1
+"Klinik Arlesheim AG",TRUE,FALSE,2000,1,1
+"Lichtblick Hospiz",FALSE,FALSE,2000,1,1
+"Limites Medical Research SAGL",FALSE,FALSE,2000,1,1
+"Marchethon CF Fribourg",FALSE,FALSE,2000,1,1
+"Marketing Connection",FALSE,FALSE,2000,1,1
+"MentAge GmbH",FALSE,FALSE,2000,1,1
+"Pharmazeutische Gesellschaft Basel",FALSE,FALSE,2000,1,1
+"Praxis Dr. Aslan/ Dr. Gruhler",FALSE,FALSE,2000,1,1
+"Praxis Dr. Gut André / Dr. Bründler Robert",FALSE,FALSE,2000,1,1
+"Praxis Dr. Zerlauth Markus",FALSE,FALSE,2000,1,1
+"Qualitätszirkel Wettingen- Würenlos",FALSE,FALSE,2000,1,1
+"Réseau Lausannois du Sein",FALSE,FALSE,2000,1,1
+"RRMES (Reseau Romand de Medecine Exerdce et Sport)",FALSE,FALSE,2000,1,1
+"Schlossberg Aerztezentrum AG",FALSE,FALSE,2000,1,1
+"SCHWEIZERISCHE RESTLESSLEG",FALSE,FALSE,2000,1,1
+"SGPMR Schweizerische Gesellschaft für physikalische Medizin und Rehabilitation",FALSE,FALSE,2000,1,1
+"SGSM ""Schweiz. Gesellschaft fürSportmedizn""",FALSE,FALSE,2000,1,1
+"STDV - Società ticinese di dermatologia e venerologia",FALSE,FALSE,2000,2,2
+"Suprax Zentrum für ambulante Suchtbehandlung",FALSE,FALSE,2000,1,1
+"Verein der Pneumologen des Kantons Bern (VPB)",FALSE,FALSE,2000,2,2
+"Vereinigung Hausärzte beider basel VHBB MentAge GmbH",FALSE,FALSE,2000,1,1
+"Zentralpraxis Wallisellen AG",FALSE,FALSE,2000,1,1
+"Zentralschweizer Ärzte-Forum",FALSE,FALSE,2000,1,1
+"Gemeinschaftspraxis Dr. Pape",FALSE,FALSE,1975,1,1
+"MWV Switzerland SA",FALSE,FALSE,1892.53,1,1
+"Kantonsspital Obwalden",TRUE,FALSE,1889,2,2
+"Gemeinschaftspraxis magendarm BE-FR",FALSE,FALSE,1800,1,1
+"GREPA Groupemenet romand des pédiatres",FALSE,FALSE,1800,1,1
+"SSPS Sl ""Societä Svizzera di Psichiatria Sociale",FALSE,FALSE,1800,2,2
+"Zentrum für Labormedizin",FALSE,FALSE,1738,1,1
+"Doctrina Med AG",FALSE,FALSE,1660,1,1
+"Schweizerische Gesellschaft für medizinische Laseranwendungen",FALSE,FALSE,1650,1,1
+"Kantonsspital Uri",TRUE,FALSE,1629.65,2,2
+"Regiovital AG, RegioPharm",FALSE,FALSE,1620,1,1
+"Hausarztmedizin Kreis 6",FALSE,FALSE,1600,1,1
+"Verein Rehaex",FALSE,FALSE,1600,1,1
+"Hausärzteverein Mutschellen",FALSE,FALSE,1550,1,1
+"CAPPIJONCTION",FALSE,FALSE,1508,1,1
+"Clinique de Psychiatrie - Unites Hospitalieres Belle-Idee",TRUE,FALSE,1508,1,1
+"ADMED Laboratoires",FALSE,FALSE,1500,1,1
+"Ärzteverein Rorschach Rheintal",FALSE,FALSE,1500,1,1
+"BGP Products GmbH, Mylan EPD",FALSE,FALSE,1500,1,1
+"Bildungsreihe ""Wie wollen wir alt werden?""",FALSE,FALSE,1500,1,1
+"Cabinet Pneumologie et Médecine Interne",FALSE,FALSE,1500,1,1
+"Core medical lab Qualim Sàrl",FALSE,FALSE,1500,1,1
+"Fonds Nicolas Pechère, Prof. Pechère-Bertschi Antoinette",FALSE,FALSE,1500,1,1
+"Gastropraxis Luzern GmbH Hirschengraben 33 Luzern",FALSE,FALSE,1500,1,1
+"GastroPraxis Wehr",FALSE,FALSE,1500,1,1
+"Hausärzteverein",FALSE,FALSE,1500,1,1
+"Herz-Neuro-Zentrum Bodensee AG",FALSE,FALSE,1500,1,1
+"Hôpital du Val-de-Ruz",TRUE,FALSE,1500,1,1
+"Klinik Pyramide",TRUE,FALSE,1500,1,1
+"Mädical Centre Vaud SA c/o Magellan",FALSE,FALSE,1500,1,1
+"Netzwerk für Fortbildung am oberen Zürichsee",FALSE,FALSE,1500,2,2
+"Neurologie Amriswil",FALSE,FALSE,1500,1,1
+"Pathologie Institut Enge Tödistrasse 48 Zürich",FALSE,FALSE,1500,1,1
+"Pediatric Emergency Medicine Switzerland PEMS",FALSE,FALSE,1500,1,1
+"Praxis Dr. Gut / Dr. Bründler",FALSE,FALSE,1500,1,1
+"Praxis Dr. med. Theo und Priska Kruker",FALSE,FALSE,1500,1,1
+"Praxis Dr. Rambach Klaus",FALSE,FALSE,1500,1,1
+"Psychiatrische Dienste Biel",TRUE,FALSE,1500,2,2
+"Senosuisse",FALSE,FALSE,1500,1,1
+"Societe Suisse d'Onirologie Medicale",FALSE,FALSE,1500,1,1
+"Studio Dr. med. Montedoro Ezio",FALSE,FALSE,1500,1,1
+"Studio Dr. Scatizza Andrea",FALSE,FALSE,1500,1,1
+"Vereinigung der Ärztinnen und Ärzte beider Frenkentäler",FALSE,FALSE,1500,1,1
+"Vereinigung der Zürcher Aerzte für Hals-Nasen-Ohrenkrankheiten",FALSE,FALSE,1500,1,1
+"Zentrum für Alterspsychiatrie (ZAP)",FALSE,FALSE,1500,1,1
+"Schweizer Gesells chaft für Gebirgsm edizin",FALSE,FALSE,1487.92,1,1
+"Arztpraxis Kalkbreite",FALSE,FALSE,1459.25,1,1
+"Ges. für Neurologie und Neurochirurgie Regio Basilensis c/o Dr. med. Irene Barone",FALSE,FALSE,1450,1,1
+"Dertnapraxis AG",FALSE,FALSE,1400,1,1
+"Gastroenter. Praxis Balsiger, Seibold & Partner und Crohn- Colitis-Zentrum",FALSE,FALSE,1400,1,1
+"Cabinet Dr. méd. Francine Besse",FALSE,FALSE,1388.9,1,1
+"INRswiss",FALSE,FALSE,1300,1,1
+"Praxis Tulpenstarsse AG",FALSE,FALSE,1300,2,2
+"Rathaus Apotheke St. Gallen AG",FALSE,FALSE,1296,1,1
+"LesToises-Centre de psychiatrie et Psychotherapie",FALSE,FALSE,1280,1,1
+"Schulthess Klinik -Rheumatologie",TRUE,FALSE,1263,1,1
+"Albert Bruppacher Stiftung",FALSE,FALSE,1200,1,1
+"Centre Médical du Lignon",FALSE,FALSE,1200,1,1
+"Groupe des Dermatologues Genev.",FALSE,FALSE,1200,1,1
+"Hausarztverein Flawil-Degershei m",FALSE,FALSE,1200,1,1
+"K30MED",FALSE,FALSE,1200,1,1
+"Schweizerische Interessensgruppe für Operationspflege",FALSE,FALSE,1200,1,1
+"Medizinisches Zentrum gleis d AG",FALSE,FALSE,1100,1,1
+"FUNDACIÓN DE APOYO Y ACOMPÑAMIENTO EN MANEJO ONCOLÓGICO FUNDAYAMA",FALSE,FALSE,1011,1,1
+"Aerzteverein Züriplus",FALSE,FALSE,1000,1,1
+"Arbeitsgemeinschaft für Perinatale Pharmakologie, Prof. Mandach",FALSE,FALSE,1000,1,1
+"Association for Research in Surgery (ARS)",FALSE,FALSE,1000,1,1
+"Association Médecins familles neuchâtelois",FALSE,FALSE,1000,1,1
+"Association Renco ntre Cardiologie A nnuelle",FALSE,FALSE,1000,1,1
+"Association Valaisanne des Préparateurs en Pharmacie AVPPH",FALSE,FALSE,1000,1,1
+"Associazione della Svizzera italiana per la depressions cronica, per i disturbi dell'ansia e per i disturbi ossessive e compulsivi",FALSE,FALSE,1000,1,1
+"Centre Medical de la C6te SA",FALSE,FALSE,1000,1,1
+"Chirurgische Praxis Hohmad GmbH",FALSE,FALSE,1000,1,1
+"Clinique La Métairie",TRUE,FALSE,1000,1,1
+"Colloque r^gionaux du mardi",FALSE,FALSE,1000,1,1
+"Etablissement Hospitaliere Multisite cantonal - EHM",TRUE,FALSE,1000,1,1
+"European Society of Gyn (ESG)",FALSE,TRUE,1000,1,1
+"FMH",FALSE,FALSE,1000,1,1
+"Formation Continue Méd. Famille",FALSE,FALSE,1000,1,1
+"GAAA Gesellschaft Aargauischer Anästhesieärztinnen und Ärzte",FALSE,FALSE,1000,1,1
+"Groupe de Medicometne",FALSE,FALSE,1000,1,1
+"Groupe Rhumatologues Vaudois GRV",FALSE,FALSE,1000,1,1
+"InterDigest",FALSE,FALSE,1000,1,1
+"IPS-Netzwerk Südostschweiz (INSO)",FALSE,FALSE,1000,1,1
+"Klinik Sonnenhof",TRUE,FALSE,1000,1,1
+"Klinik St. Pirminsberg Psychiatrie-Dienste Süd",TRUE,FALSE,1000,1,1
+"Medecins de famille Valais",FALSE,FALSE,1000,1,1
+"OncoCampus Switzerland Geschäftstelle c/o Pomcany's Marketing",FALSE,FALSE,1000,1,1
+"Osteoclub Ticino",FALSE,FALSE,1000,1,1
+"Ostschw. Gesellschaft für Psychiatrie und Kinder- und Jugendpsychiatrie",FALSE,FALSE,1000,2,2
+"Praxis Dr. Dolder Mathias",FALSE,FALSE,1000,1,1
+"Psychiatrie & Psychotherapie Pizol",FALSE,FALSE,1000,1,1
+"Rheumazentrum Thun",FALSE,FALSE,1000,1,1
+"SAGB",FALSE,FALSE,1000,1,1
+"santémed Ges.zentrum Rorschach",FALSE,FALSE,1000,1,1
+"Schweizerische Fachgesellschaft ADHS",FALSE,FALSE,1000,1,1
+"Schweiz. Gesellsch. für Ästhet. Chirurgie (SGÄC)",FALSE,FALSE,1000,1,1
+"Societä ticinese dl dermatologia e venereologia c/o Dr. med. Davide Donghi",FALSE,FALSE,1000,1,1
+"Stiftung Suchthilfe MSH 2",FALSE,FALSE,1000,1,1
+"Suchtberatung AGS",FALSE,FALSE,1000,1,1
+"Verband Ostschweizer Rettungssanitäter",FALSE,FALSE,1000,1,1
+"Verein  GYNeLEARNING",FALSE,FALSE,1000,1,1
+"Zentrum für Psychische Gesundheit",FALSE,FALSE,1000,1,1
+"Die Schweizer Chirurginnen und Chirurgen",FALSE,FALSE,925.95,1,1
+"Spitalregion Rheintal Werdenberg",TRUE,FALSE,925.95,1,1
+"Apothekerverein des Kanton Zug Martin Affentranger Anklin Apotheke AG",FALSE,FALSE,900,1,1
+"Assooazione Medico In Pratica",FALSE,FALSE,900,1,1
+"Ges. phys.Med./Rehab./Rheumatol.",FALSE,FALSE,900,1,1
+"Schweizer Partnerschaft HAS Haiti",FALSE,FALSE,900,1,1
+"Praxis Dr. Rein Patrick",FALSE,FALSE,880,1,1
+"Ärzte mit Patientenapotheke APA",FALSE,FALSE,800,2,2
+"eSwiss Medical & Surgical Center",FALSE,FALSE,800,1,1
+"Hausärzte Schweiz Berufsverband der Haus- und Kinderärztinnen Schweiz",FALSE,FALSE,800,1,1
+"Kinderärzte-Vereinigung der Zentralschweiz",FALSE,FALSE,800,2,2
+"monDoc-vs",FALSE,FALSE,800,1,1
+"Praxis Dr. Misteli Max",FALSE,FALSE,800,1,1
+"SäntiMed AG c/o Praxis Brunnenhof",FALSE,FALSE,800,1,1
+"Société Neuchâteloise de Pédiatrie",FALSE,FALSE,800,1,1
+"Swiss Society for Neuroscience",FALSE,FALSE,800,1,1
+"Viollier AG, Basel -Ambulatorium und Kardiologie",FALSE,FALSE,784,1,1
+"Praxis Dr. Hasler Loretta AG",FALSE,FALSE,771,1,1
+"Immunologie Zentrum",FALSE,FALSE,758,1,1
+"Augenzentrum Vista Alpina AG",FALSE,FALSE,750,1,1
+"Praxis Dr. Reichlin/Dr. Jermann",FALSE,FALSE,750,1,1
+"USGG - Union Schweiz. Gesellschaften f. Gefässkrankheiten",FALSE,FALSE,750,1,1
+"Assemblée génér ale des Pneumolo gies Vaudois",FALSE,FALSE,740.74,1,1
+"Labormedizinisches Zentrum Dr. Risch Anstalt",FALSE,FALSE,701.95,1,1
+"Amicale TCC",FALSE,FALSE,700,1,1
+"HautZentrum Zürich AG",FALSE,FALSE,700,1,1
+"pharmacieplus franches- montagnes",FALSE,FALSE,700,1,1
+"Apotheke am Marktplatz",FALSE,FALSE,663,1,1
+"Apotheke Dr. Bruhin",FALSE,FALSE,663,1,1
+"Apotheke Dr. Langer AG",FALSE,FALSE,663,1,1
+"Apotheke Wyss AG",FALSE,FALSE,663,1,1
+"Breite-Apotheke",FALSE,FALSE,663,1,1
+"Central-Apotheke",FALSE,FALSE,663,1,1
+"Fortuna Apotheke",FALSE,FALSE,663,1,1
+"Kreuzapotheke",FALSE,FALSE,663,1,1
+"Löwen Apotheke",FALSE,FALSE,663,1,1
+"Sevogel-Apotheke",FALSE,FALSE,663,1,1
+"TopPharm Domat Apotheke",FALSE,FALSE,663,1,1
+"Volta-Apotheke",FALSE,FALSE,663,1,1
+"Clinique La Prairie SA",TRUE,FALSE,648.14,1,1
+"Centre Compétence Rhumatologie SA",FALSE,FALSE,640,2,2
+"GDNE - Groupe des dermatologues de Neuchâtel et environs",FALSE,FALSE,600,1,1
+"Groupement des Dermatologues de Neuchâtel",FALSE,FALSE,600,1,1
+"Praxis Dr. Fuhrimann Peter",FALSE,FALSE,600,1,1
+"Praxisgemeinschaft Gartenmatt",FALSE,FALSE,584.7,1,1
+"Zentrum für Suchtmedizin ZfS",FALSE,FALSE,576,1,1
+"Rheumaliestal",FALSE,FALSE,560,1,1
+"EZ Medical Network AG",FALSE,FALSE,540,1,1
+"3JMED Sàrl",FALSE,FALSE,500,1,1
+"Ärzte & Physio am Platz Am Platz 8 Bad Ragaz",FALSE,FALSE,500,1,1
+"Cabinet Dr Gander Marc",FALSE,FALSE,500,1,1
+"Centre de Dermatologie Rive",FALSE,FALSE,500,1,1
+"Clinica Psichiatrica di Giorno",TRUE,FALSE,500,1,1
+"Clinica Santa Croce SA",TRUE,FALSE,500,1,1
+"Comunitä Familiäre Antenna Icaro",FALSE,FALSE,500,1,1
+"Epi-Suisse",FALSE,FALSE,500,2,2
+"Groupement des Medecin des Franche Montagne",FALSE,FALSE,500,1,1
+"HAV St.Gallen",FALSE,FALSE,500,1,1
+"Hôpitaux de l'Est Lémanique",TRUE,FALSE,500,1,1
+"Kollegium für forschende Hausärzte",FALSE,FALSE,500,1,1
+"Krankenhausgesellschaft Schwyz",FALSE,FALSE,500,1,1
+"Kreisspital für das Freiamt - Innere Medizin",TRUE,FALSE,500,1,1
+"Ligue Neuchâteloise",FALSE,FALSE,500,1,1
+"Lungenpraxis Spiez AG Oberlandstrasse 9 Spiez",FALSE,FALSE,500,1,1
+"Magnolias Sàrl",FALSE,FALSE,500,1,1
+"Praxis Dr. Jost",FALSE,FALSE,500,1,1
+"Psychiatrische Klinik Zugersee",TRUE,FALSE,500,1,1
+"Reha Chrischona -Medizin",FALSE,FALSE,500,1,1
+"Schweizerische Gesellschaft für Geschichte der Pharmazie SGGP",FALSE,FALSE,500,1,1
+"Spital Oberengadin",TRUE,FALSE,500,1,1
+"Studio medico Dr. Nobile",FALSE,FALSE,500,1,1
+"Verein Kinderärzte-Plattform ADHS",FALSE,FALSE,500,1,1
+"Werner Alfred Selo Stiftung c/o Life Science Communication AG",FALSE,FALSE,500,1,1
+"Maihofpraxis",FALSE,FALSE,482.53,1,1
+"Spital Uster",TRUE,FALSE,405,1,1
+"Gesellschaft der Ärztinnen und Ärzte des Kantons Solothurn",FALSE,FALSE,400,1,1
+"Stiftung Hopp-la",FALSE,FALSE,400,1,1
+"Derma Limmattal AG",FALSE,FALSE,360,1,1
+"Ärztehaus Fluntern - Praxis Dr. Halama Marcel",FALSE,FALSE,350,1,1
+"Assemblea primaverile Societa Ticinese di Dermatologia e Venereologia",FALSE,FALSE,330,1,1
+"Adipositaszentrum Privatklinik Lindenberg",TRUE,FALSE,300,1,1
+"Centre Ophtalmologique de Rive",FALSE,FALSE,300,1,1
+"Groupe Romand d'echographie clinique",FALSE,FALSE,300,1,1
+"Verein Lichtblick Hospiz Basel",FALSE,FALSE,300,1,1
+"Schweizerische Gesellschaft für Notfall- und Rettungsmedizin",FALSE,FALSE,250,1,1
+"Cabinet Dr Aeschbach Thomas",FALSE,FALSE,240,1,1
+"Cabinet Dr Haldy / Dr Herkommer",FALSE,FALSE,240,1,1
+"Coeur Battant",FALSE,FALSE,200,1,1
+"Schweizerische Gesellschaft für Spitalhygiene",FALSE,FALSE,200,1,1
+"Schweizerische Gesellschaft für Gerontologie",FALSE,FALSE,170,1,1
+"Schweizerische Alzheimervereinigung",FALSE,FALSE,40,1,1

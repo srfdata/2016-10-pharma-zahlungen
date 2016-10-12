@@ -1,0 +1,1604 @@
+---
+title: "Pharma Payments"
+subtitle: "Analysis"
+author: "SRF Data, Salim Brüggemann (data@srf.ch)"
+date: "2016-10-06"
+output: html_document
+---
+
+## Preparations
+
+### Clear workspace and install necessary packages
+
+```{r cleanup}
+remove(list = ls(all.names = TRUE))
+
+detach_all_packages <- function()
+{
+  basic_packages_blank <-  c("base",
+                             "datasets",
+                             "graphics",
+                             "grDevices",
+                             "methods",
+                             "stats",
+                             "utils")
+  
+  basic_packages <- paste0("package:", basic_packages_blank)
+  
+  package_list <- search()[ifelse(unlist(gregexpr("package:", search())) == 1, TRUE, FALSE)]
+  
+  package_list <- setdiff(package_list, basic_packages)
+  
+  if ( length(package_list) > 0 )  for ( package in package_list )
+  {
+    detach(package, character.only = TRUE)
+    print(paste("package ", package, " detached", sep = ""))
+  }
+  
+  # unload namespace
+  # lapply(rev(setdiff(loadedNamespaces(), basic_packages_blank)), function(pkg)
+  # {
+  #   unloadNamespace(pkg)
+  #   print(paste("namespace ", package, " unloaded", sep = ""))
+  # })
+}
+
+detach_all_packages()
+
+if ( !require(tidyr) )
+{
+  install.packages("tidyr", repos = "https://cloud.r-project.org/")
+  require(tidyr)
+}
+if ( !require(magrittr) )
+{
+  install.packages("magrittr", repos = "https://cloud.r-project.org/")
+  require(magrittr)
+}
+if ( !require(ggplot2) )
+{
+  install.packages("ggplot2", repos = "https://cloud.r-project.org/")
+  require(ggplot2)
+}
+if ( !require(scales) )
+{
+  install.packages("scales", repos = "https://cloud.r-project.org/")
+  require(scales)
+}
+if ( !require(jsonlite) )
+{
+  install.packages("jsonlite", repos = "https://cloud.r-project.org/")
+  require(jsonlite)
+}
+if ( !require(dplyr) )
+{
+  install.packages("dplyr", repos = "https://cloud.r-project.org/")
+  require(dplyr)
+}
+```
+
+### Set working directory and various options
+
+```{r setup,  echo=FALSE, warning=FALSE, message=FALSE}
+
+knitr::opts_chunk$set(comment = NA,
+                      message = FALSE,
+                      warning = FALSE,
+                      fig.width = 10)
+
+options(getSymbols.warning4.0 = FALSE,
+        digits = 5,
+        scipen = 999)
+```
+
+### Read in necessary datasets and create output directory
+
+```{r read_data}
+# read in main dataset
+data_main <-
+  readRDS(file = "input/data_main.Rds")
+
+# read in research and development dataset
+data_rd <-
+  readRDS(file = "input/data_rd.Rds")
+
+if ( !dir.exists(paths = "output") ) dir.create(path = "output")
+```
+
+### Consolidate each pharma company with multiple IDs (## & ##.1) into one company (##)
+
+```{r consolidate_companies}
+sub_company_IDs <-
+  as.numeric(grep(x = as.character(unique(data_main$company_ID)),
+                  pattern = ".",
+                  fixed = TRUE,
+                  value = TRUE))
+
+super_company_IDs <- as.numeric(gsub(x = sub_company_IDs,
+                                     pattern = "\\..+",
+                                     replacement = "",
+                                     perl = TRUE))
+
+for ( i in 1:length(sub_company_IDs) )
+{
+  # replace names of sub companies with super company ones in data_main
+  data_main$company[data_main$company_ID == sub_company_IDs[i]] <-
+    data_main$company[data_main$company_ID == super_company_IDs[i]][1]
+  
+  # replace locality of sub companies with super company ones in data_main
+  data_main$company_locality[data_main$company_ID == sub_company_IDs[i]] <-
+    data_main$company_locality[data_main$company_ID == super_company_IDs[i]][1]
+  
+  # replace ID of sub companies with super company ones in data_main
+  data_main$company_ID[data_main$company_ID == sub_company_IDs[i]] <-
+    super_company_IDs[i]
+  
+  # calculate and replace research and development values of sub and super companies in data_rd
+  data_rd$research_and_development[data_rd$company_ID == super_company_IDs[i]] <-
+    sum(data_rd$research_and_development[data_rd$company_ID == super_company_IDs[i]],
+        data_rd$research_and_development[data_rd$company_ID == sub_company_IDs[i]],
+        na.rm = TRUE)
+  
+  # replace ID of sub companies with super company ones in data_rd
+  data_rd$company_ID[data_rd$company_ID == sub_company_IDs[i]] <-
+    super_company_IDs[i]
+}
+# remove sub companies from data_rd
+data_rd <- data_rd[!duplicated(data_rd$company_ID), ]
+```
+
+## Analysis
+
+### General analysis
+
+#### Conduct general analysis
+
+```{r general_analysis}
+nr_of_companies <-
+  with(data_main,
+       n_distinct(company_ID))
+
+nr_of_companies_2015 <-
+  with(data_main,
+       n_distinct(company_ID[year == 2015]))
+
+nr_of_companies_2015_HCO <-
+  with(data_main,
+       n_distinct(company_ID[payment_receiver_type != "HCP"
+                             & year == 2015]))
+
+nr_of_companies_2015_HCP <-
+  with(data_main,
+       n_distinct(company_ID[payment_receiver_type == "HCP"
+                             & year == 2015]))
+
+
+sum_total <-
+  with(data_main,
+       sum(amount_CHF))
+
+sum_total_2015 <-
+  with(data_main,
+       sum(amount_CHF[year == 2015]))
+
+sum_total_2015_HCO <-
+  with(data_main,
+       sum(amount_CHF[payment_receiver_type != "HCP"
+                      & year == 2015]))
+
+sum_total_2015_HCO_anon <-
+  with(data_main,
+       sum(amount_CHF[payment_receiver_type != "HCP"
+                      & is_anonymous == TRUE
+                      & year == 2015]))
+
+sum_total_2015_HCO_known <-
+  with(data_main,
+       sum(amount_CHF[payment_receiver_type != "HCP"
+                      & is_anonymous == FALSE
+                      & year == 2015]))
+
+sum_total_2015_HCP <-
+  with(data_main,
+       sum(amount_CHF[payment_receiver_type == "HCP"
+                      & year == 2015]))
+
+sum_total_2015_HCP_anon <-
+  with(data_main,
+       sum(amount_CHF[payment_receiver_type == "HCP"
+                      & is_anonymous == TRUE
+                      & year == 2015]))
+
+sum_total_2015_HCP_known <-
+  with(data_main,
+       sum(amount_CHF[payment_receiver_type == "HCP"
+                      & is_anonymous == FALSE
+                      & year == 2015]))
+
+
+# remark: all category contributions are in CHF so no currency conversion is necessary
+sum_donations_and_grants_2015 <- 
+  with(data_main,
+       sum(donations_and_grants[year == 2015],
+           na.rm = TRUE))
+
+sum_sponsorships_2015 <- 
+  with(data_main,
+       sum(sponsorships[year == 2015],
+           na.rm = TRUE))
+
+sum_registration_fees_2015 <- 
+  with(data_main,
+       sum(registration_fees[year == 2015],
+           na.rm = TRUE))
+
+sum_travel_and_accomodation_2015 <- 
+  with(data_main,
+       sum(travel_and_accomodation[year == 2015],
+           na.rm = TRUE))
+
+sum_fees_2015 <- 
+  with(data_main,
+       sum(fees[year == 2015],
+           na.rm = TRUE))
+
+sum_related_expenses_2015 <- 
+  with(data_main,
+       sum(related_expenses[year == 2015],
+           na.rm = TRUE))
+
+
+highest_payment <-
+  with(data_main,
+       max(amount_CHF))
+
+highest_payment_2015_HCO_anon <-
+  with(data_main,
+       max(amount_CHF[year == 2015
+                      & payment_receiver_type != "HCP"
+                      & is_anonymous == TRUE]))
+
+highest_payment_2015_HCO_known <-
+  with(data_main,
+       max(amount_CHF[year == 2015
+                      & payment_receiver_type != "HCP"
+                      & is_anonymous == FALSE]))
+
+highest_payment_2015_HCP_anon <-
+  with(data_main,
+       max(amount_CHF[year == 2015
+                      & payment_receiver_type == "HCP"
+                      & is_anonymous == TRUE]))
+
+highest_payment_2015_HCP_known <-
+  with(data_main,
+       max(amount_CHF[year == 2015
+                      & payment_receiver_type == "HCP"
+                      & is_anonymous == FALSE]))
+
+
+mean_payment <-
+  with(data_main,
+       mean(amount_CHF))
+
+mean_payment_2015 <-
+  with(data_main %>% filter(year == 2015),
+       mean(amount_CHF))
+
+mean_payment_2015_HCO <-
+  with(data_main %>% filter(year == 2015
+                            & payment_receiver_type != "HCP"),
+       mean(amount_CHF))
+
+mean_payment_2015_HCP <-
+  with(data_main %>% filter(year == 2015
+                            & payment_receiver_type == "HCP"),
+       mean(amount_CHF))
+
+mean_payment_2015_HCO_known <-
+  with(data_main %>% filter(year == 2015
+                            & payment_receiver_type != "HCP"
+                            & !is_anonymous),
+       mean(amount_CHF))
+
+mean_payment_2015_HCO_anon <-
+  with(data_main %>% filter(year == 2015
+                            & payment_receiver_type != "HCP"
+                            & is_anonymous),
+       mean(amount_CHF))
+
+mean_payment_2015_HCP_known <-
+  with(data_main %>% filter(year == 2015
+                            & payment_receiver_type == "HCP"
+                            & !is_anonymous),
+       mean(amount_CHF))
+
+mean_payment_2015_HCP_anon <-
+  with(data_main %>% filter(year == 2015
+                            & payment_receiver_type == "HCP"
+                            & is_anonymous),
+       mean(amount_CHF))
+
+
+median_payment <-
+  with(data_main,
+       median(amount_CHF))
+
+median_payment_2015 <-
+  with(data_main %>% filter(year == 2015),
+       median(amount_CHF))
+
+median_payment_2015_HCO <-
+  with(data_main %>% filter(year == 2015
+                            & payment_receiver_type != "HCP"),
+       median(amount_CHF))
+
+median_payment_2015_HCP <-
+  with(data_main %>% filter(year == 2015
+                            & payment_receiver_type == "HCP"),
+       median(amount_CHF))
+
+median_payment_2015_HCO_known <-
+  with(data_main %>% filter(year == 2015
+                            & payment_receiver_type != "HCP"
+                            & !is_anonymous),
+       median(amount_CHF))
+
+median_payment_2015_HCO_anon <-
+  with(data_main %>% filter(year == 2015
+                            & payment_receiver_type != "HCP"
+                            & is_anonymous),
+       median(amount_CHF))
+
+median_payment_2015_HCP_known <-
+  with(data_main %>% filter(year == 2015
+                            & payment_receiver_type == "HCP"
+                            & !is_anonymous),
+       median(amount_CHF))
+
+median_payment_2015_HCP_anon <-
+  with(data_main %>% filter(year == 2015
+                            & payment_receiver_type == "HCP"
+                            & is_anonymous),
+       median(amount_CHF))
+
+
+rd_total <-
+  with(data_rd,
+       sum(research_and_development,
+           na.rm = TRUE))
+
+rd_highest <-
+  with(data_rd,
+       max(research_and_development,
+           na.rm = TRUE))
+
+rd_mean <-
+  with(data_rd,
+       mean(research_and_development,
+            na.rm = TRUE))
+
+rd_median <-
+  with(data_rd,
+       median(research_and_development,
+              na.rm = TRUE))
+
+
+# company summary 2015 (amounts and percentages HCP/HCO anonymous/known; r&d entering into total anonymous amounts)
+company_summary_2015 <-
+  data_main %>%
+  filter(year == 2015) %>%
+  group_by(company_ID, company) %>%
+  summarise(total_amount_CHF = sum(amount_CHF)) %>%
+  ungroup()
+
+company_summary_2015$research_and_development <- NA
+company_summary_2015$total_known_amount_CHF <- NA
+company_summary_2015$total_anon_amount_CHF <- NA
+company_summary_2015$total_known_percentage <- NA
+company_summary_2015$total_anon_percentage <- NA
+company_summary_2015$HCP_amount_CHF <- NA
+company_summary_2015$HCO_amount_CHF <- NA
+company_summary_2015$HCP_percentage <- NA
+company_summary_2015$HCO_percentage <- NA
+company_summary_2015$HCP_known_amount_CHF <- NA
+company_summary_2015$HCP_anon_amount_CHF <- NA
+company_summary_2015$HCP_known_percentage <- NA
+company_summary_2015$HCP_anon_percentage <- NA
+company_summary_2015$HCO_known_amount_CHF <- NA
+company_summary_2015$HCO_anon_amount_CHF <- NA
+company_summary_2015$HCO_known_percentage <- NA
+company_summary_2015$HCO_anon_percentage <- NA
+
+for ( i in 1:nrow(company_summary_2015) )
+{
+  company_summary_2015$research_and_development[i] <-
+    with(data_rd,
+         ifelse(company_summary_2015$company_ID[i] %in% company_ID,
+                research_and_development[company_ID == company_summary_2015$company_ID[i]],
+                NA))
+  
+  company_summary_2015$HCP_amount_CHF[i] <-
+    with(data_main,
+         sum(amount_CHF[year == 2015
+                        & payment_receiver_type == "HCP"
+                        & company_ID == company_summary_2015$company_ID[i]]))
+  
+  company_summary_2015$HCO_amount_CHF[i] <-
+    with(data_main,
+         sum(amount_CHF[year == 2015
+                        & payment_receiver_type != "HCP"
+                        & company_ID == company_summary_2015$company_ID[i]]))
+  
+  company_summary_2015$HCP_percentage[i] <-
+    (company_summary_2015$HCP_amount_CHF[i] / company_summary_2015$total_amount_CHF[i]) * 100
+  
+  company_summary_2015$HCO_percentage[i] <-
+    (company_summary_2015$HCO_amount_CHF[i] / company_summary_2015$total_amount_CHF[i]) * 100
+  
+  company_summary_2015$HCP_known_amount_CHF[i] <-
+    with(data_main,
+         sum(amount_CHF[year == 2015 & payment_receiver_type == "HCP"
+                        & !is_anonymous
+                        & company_ID == company_summary_2015$company_ID[i]]))
+  
+  company_summary_2015$HCP_anon_amount_CHF[i] <-
+    with(data_main,
+         sum(amount_CHF[year == 2015
+                        & payment_receiver_type == "HCP"
+                        & is_anonymous
+                        & company_ID == company_summary_2015$company_ID[i]]))
+  
+  company_summary_2015$HCP_known_percentage[i] <-
+    (company_summary_2015$HCP_known_amount_CHF[i] / company_summary_2015$HCP_amount_CHF[i]) * 100
+  
+  company_summary_2015$HCP_anon_percentage[i] <-
+    (company_summary_2015$HCP_anon_amount_CHF[i] / company_summary_2015$HCP_amount_CHF[i]) * 100
+  
+  company_summary_2015$HCO_known_amount_CHF[i] <-
+    with(data_main,
+         sum(amount_CHF[year == 2015
+                        & payment_receiver_type != "HCP"
+                        & !is_anonymous
+                        & company_ID == company_summary_2015$company_ID[i]]))
+  
+  company_summary_2015$HCO_anon_amount_CHF[i] <-
+    with(data_main,
+         sum(amount_CHF[year == 2015 & payment_receiver_type != "HCP"
+                        & is_anonymous
+                        & company_ID == company_summary_2015$company_ID[i]]))
+  
+  company_summary_2015$HCO_known_percentage[i] <-
+    (company_summary_2015$HCO_known_amount_CHF[i] / company_summary_2015$HCO_amount_CHF[i]) * 100
+  
+  company_summary_2015$HCO_anon_percentage[i] <-
+    (company_summary_2015$HCO_anon_amount_CHF[i] / company_summary_2015$HCO_amount_CHF[i]) * 100
+  
+  company_summary_2015$total_amount_CHF[i] <-
+    ifelse(is.na(company_summary_2015$research_and_development[i]),
+           company_summary_2015$total_amount_CHF[i],
+           company_summary_2015$total_amount_CHF[i] + company_summary_2015$research_and_development[i])
+}
+
+company_summary_2015$total_known_amount_CHF <-
+  with(company_summary_2015,
+       total_amount_CHF - (ifelse(is.na(research_and_development),
+                                  0,
+                                  research_and_development)
+                           + HCP_anon_amount_CHF
+                           + HCO_anon_amount_CHF))
+
+company_summary_2015$total_anon_amount_CHF <-
+  with(company_summary_2015,
+       total_amount_CHF - total_known_amount_CHF)
+
+company_summary_2015$total_known_percentage <-
+  with(company_summary_2015,
+       (total_known_amount_CHF / total_amount_CHF) * 100)
+
+company_summary_2015$total_anon_percentage <-
+  with(company_summary_2015,
+       (total_anon_amount_CHF / total_amount_CHF) * 100)
+
+## add row `Total` at the end
+company_summary_2015 <-
+  bind_rows(company_summary_2015,
+            with(company_summary_2015,
+                 data.frame(company = "Total",
+                            total_amount_CHF = sum(total_amount_CHF, na.rm = TRUE),
+                            research_and_development = sum(research_and_development, na.rm = TRUE),
+                            total_known_amount_CHF = sum(total_known_amount_CHF, na.rm = TRUE),
+                            total_anon_amount_CHF = sum(total_anon_amount_CHF, na.rm = TRUE),
+                            total_known_percentage = sum(total_known_amount_CHF, na.rm = TRUE) / sum(total_amount_CHF, na.rm = TRUE) * 100,
+                            total_anon_percentage = sum(total_anon_amount_CHF, na.rm = TRUE) / sum(total_amount_CHF, na.rm = TRUE) * 100,
+                            HCP_amount_CHF = sum(HCP_amount_CHF, na.rm = TRUE),
+                            HCO_amount_CHF = sum(HCO_amount_CHF, na.rm = TRUE),
+                            HCP_percentage = sum(HCP_amount_CHF, na.rm = TRUE) /
+                              (sum(HCP_amount_CHF, na.rm = TRUE) + sum(HCO_amount_CHF, na.rm = TRUE)) * 100,
+                            HCO_percentage = sum(HCO_amount_CHF, na.rm = TRUE) /
+                              (sum(HCP_amount_CHF, na.rm = TRUE) + sum(HCO_amount_CHF, na.rm = TRUE)) * 100,
+                            HCP_known_amount_CHF = sum(HCP_known_amount_CHF, na.rm = TRUE),
+                            HCP_anon_amount_CHF = sum(HCP_anon_amount_CHF, na.rm = TRUE),
+                            HCP_known_percentage = sum(HCP_known_amount_CHF, na.rm = TRUE) / sum(HCP_amount_CHF, na.rm = TRUE) * 100,
+                            HCP_anon_percentage = sum(HCP_anon_amount_CHF, na.rm = TRUE) / sum(HCP_amount_CHF, na.rm = TRUE) * 100,
+                            HCO_known_amount_CHF = sum(HCO_known_amount_CHF, na.rm = TRUE),
+                            HCO_anon_amount_CHF = sum(HCO_anon_amount_CHF, na.rm = TRUE),
+                            HCO_known_percentage = sum(HCO_known_amount_CHF, na.rm = TRUE) / sum(HCO_amount_CHF, na.rm = TRUE) * 100,
+                            HCO_anon_percentage = sum(HCO_anon_amount_CHF, na.rm = TRUE) / sum(HCO_amount_CHF, na.rm = TRUE) * 100)))
+
+## round numbers
+company_summary_2015[, c(3:6, 9, 10, 13, 14, 17, 18)] <-
+  round(company_summary_2015[, c(3:6, 9, 10, 13, 14, 17, 18)], digits = 0)
+
+company_summary_2015[, c(7, 8, 11, 12, 15, 16, 19, 20)] <-
+  round(company_summary_2015[, c(7, 8, 11, 12, 15, 16, 19, 20)], digits = 1)
+
+## arrange variables
+company_summary_2015 %<>%
+  arrange(desc(total_amount_CHF))
+
+## write to CSV
+write.csv(x = company_summary_2015,
+          file = "output/company_summary_2015.csv",
+          fileEncoding = "utf8",
+          row.names = FALSE,
+          na = "not specified")
+
+
+# category contributions per company 2015
+category_contributions_summary_2015 <-
+  data_main %>%
+  filter(year == 2015) %>%
+  group_by(company_ID, company) %>%
+  summarise(donations_and_grants = sum(donations_and_grants, na.rm = TRUE),
+            sponsorships = sum(sponsorships, na.rm = TRUE),
+            registration_fees = sum(registration_fees, na.rm = TRUE),
+            travel_and_accomodation = sum(travel_and_accomodation, na.rm = TRUE),
+            fees = sum(fees, na.rm = TRUE),
+            related_expenses = sum(related_expenses, na.rm = TRUE),
+            total = sum(amount_CHF, na.rm = TRUE)) %>%
+  arrange(desc(total))
+
+category_contributions_summary_2015$research_and_development <- NA
+
+for ( i in 1:nrow(category_contributions_summary_2015) )
+{
+  category_contributions_summary_2015$research_and_development[i] <-
+    with(data_rd,
+         ifelse(category_contributions_summary_2015$company_ID[i] %in% company_ID,
+                research_and_development[company_ID == category_contributions_summary_2015$company_ID[i]],
+                NA))
+  
+  category_contributions_summary_2015$total[i] <-
+    with(category_contributions_summary_2015,
+         sum(total[i], research_and_development[i], na.rm = TRUE))
+}
+
+## add row `Total` at the end
+category_contributions_summary_2015 <-
+  with(data_main %>% filter(year == 2015),
+       bind_rows(category_contributions_summary_2015,
+                 data.frame(company = "Total",
+                            donations_and_grants = sum(donations_and_grants, na.rm = TRUE),
+                            sponsorships = sum(sponsorships, na.rm = TRUE),
+                            registration_fees = sum(registration_fees, na.rm = TRUE),
+                            travel_and_accomodation = sum(travel_and_accomodation, na.rm = TRUE),
+                            fees = sum(fees, na.rm = TRUE),
+                            related_expenses = sum(related_expenses, na.rm = TRUE),
+                            research_and_development = sum(data_rd$research_and_development, na.rm = TRUE),
+                            total = sum(amount_CHF, na.rm = TRUE) + sum(data_rd$research_and_development, na.rm = TRUE))))
+
+## add column `indeterminate` (to account for uncategorized and PO transactions)
+category_contributions_summary_2015 %<>%
+  mutate(indeterminate =
+           total -
+           research_and_development -
+           donations_and_grants -
+           sponsorships -
+           registration_fees -
+           travel_and_accomodation -
+           fees -
+           related_expenses) %>%
+  select(company_ID,
+         company,
+         research_and_development,
+         donations_and_grants,
+         sponsorships,
+         registration_fees,
+         travel_and_accomodation,
+         fees,
+         related_expenses,
+         indeterminate,
+         total)
+
+## round numbers
+category_contributions_summary_2015[, -c(1, 2)] <-
+  round(category_contributions_summary_2015[, -c(1, 2)], digits = 0)
+
+## write to CSV
+write.csv(x = category_contributions_summary_2015,
+          file = "output/category_contributions_summary_2015.csv",
+          fileEncoding = "utf8",
+          row.names = FALSE,
+          na = "")
+```
+
+#### Create summary of general analysis
+
+```{r general_analysis_summary}
+general_analysis_summary <-
+  paste0(
+"# Allgemeine Analyse
+
+**Hinweise:**
+
+- Pharmafirmen, [welche es versäumten](https://docs.google.com/spreadsheets/d/15fnfNlBpNlsK2x1881r33cRCuU1gS0r29HgApltoLWA#gid=1658350066), die relevanten Informationen offenzulegen, bleiben in den untenstehenden Werten unberücksichtigt.  
+
+- Alle untenstehenden Werte können berechnet werden, ohne dass die Zahlungsempfänger zuvor dedupliziert wurden.
+
+## Anzahl Pharmafirmen
+
+| Jahr | Zahlungsempfänger-Typ | Anzahl Pharmafirmen |
+| ---- | --------------------- | ------------------: |
+| alle | alle | **", nr_of_companies, "** |
+| 2015 | alle | **", nr_of_companies_2015, "** |
+| 2015 | HCO / PO | **", nr_of_companies_2015_HCO, "** |
+| 2015 | HCP | **", nr_of_companies_2015_HCP, "** |
+
+## Zahlungssummen-Total
+
+| Jahr | Zahlungsempfänger-Typ | anonym / namentlich bekannt | Summe in CHF |
+| ---- | --------------------- | --------------------------- | -----------: |
+| alle | alle | beides | **", format(sum_total, big.mark = "'"), "** |
+| 2015 | alle | beides | **", format(sum_total_2015, big.mark = "'"), "** |
+| 2015 | HCO / PO | beides | **", format(sum_total_2015_HCO, big.mark = "'"), "** |
+| 2015 | HCO / PO | namentlich bekannt | **", format(sum_total_2015_HCO_known, big.mark = "'"), "** |
+| 2015 | HCO / PO | anonym | **", format(sum_total_2015_HCO_anon, big.mark = "'"), "** |
+| 2015 | HCP | beides | **", format(sum_total_2015_HCP, big.mark = "'"), "** |
+| 2015 | HCP | namentlich bekannt | **", format(sum_total_2015_HCP_known, big.mark = "'"), "** |
+| 2015 | HCP | anonym | **", format(sum_total_2015_HCP_anon, big.mark = "'"), "** |
+
+## Zahlungssummen pro Zahlungskategorie
+
+| Jahr | Zahlungsempfänger-Typ | anonym / namentlich bekannt | Zahlungskategorie | Summe in CHF |
+| ---- | --------------------- | --------------------------- | ----------------- | -----------: |
+| 2015 | alle | beides | Spenden und Zuwendungen | **", format(sum_donations_and_grants_2015, big.mark = "'"), "** |
+| 2015 | alle | beides | Sponsoring | **", format(sum_sponsorships_2015, big.mark = "'"), "** |
+| 2015 | alle | beides | Beiträge an Anmeldegebühren | **", format(sum_registration_fees_2015, big.mark = "'"), "** |
+| 2015 | alle | beides | Reise- und Unterkunftskosten | **", format(sum_travel_and_accomodation_2015, big.mark = "'"), "** |
+| 2015 | alle | beides | Honorare für erbrachte Dienstleistungen | **", format(sum_fees_2015, big.mark = "'"), "** |
+| 2015 | alle | beides | Zusätzliche Auslagen für erbrachte Dienstleistungen | **", format(sum_related_expenses_2015, big.mark = "'"), "** |
+
+## Höchste Zahlung
+
+| Jahr | Zahlungsempfänger-Typ | anonym / namentlich bekannt | Betrag in CHF |
+| ---- | --------------------- | --------------------------- | ------------: |
+| alle | alle | beides | **", format(highest_payment, big.mark = "'"), "** |
+| 2015 | HCO / PO | namentlich bekannt | **", format(highest_payment_2015_HCO_known, big.mark = "'"), "** |
+| 2015 | HCO / PO | anonym | **", format(highest_payment_2015_HCO_anon, big.mark = "'"), "** |
+| 2015 | HCP | namentlich bekannt | **", format(highest_payment_2015_HCP_known, big.mark = "'"), "** |
+| 2015 | HCP | anonym | **", format(highest_payment_2015_HCP_anon, big.mark = "'"), "** |
+
+## Mittelwert and Median der Zahlungen
+
+| was | Jahr | Zahlungsempfänger-Typ | anonym / namentlich bekannt | Betrag in CHF |
+| :-- | ---- | --------------------- | ----------------------------| ------------: |
+| Mittelwert | alle | alle | beides | **", format(mean_payment, big.mark = "'"), "** |
+| Mittelwert | 2015 | alle | beides | **", format(mean_payment_2015, big.mark = "'"), "** |
+| Mittelwert | 2015 | HCO / PO | beides | **", format(mean_payment_2015_HCO, big.mark = "'"), "** |
+| Mittelwert | 2015 | HCP | beides | **", format(mean_payment_2015_HCP, big.mark = "'"), "** |
+| Mittelwert | 2015 | HCO / PO | namentlich bekannt | **", format(mean_payment_2015_HCO_known, big.mark = "'"), "** |
+| Mittelwert | 2015 | HCO / PO | anonym | **", format(mean_payment_2015_HCO_anon, big.mark = "'"), "** |
+| Mittelwert | 2015 | HCP | namentlich bekannt | **", format(mean_payment_2015_HCP_known, big.mark = "'"), "** |
+| Mittelwert | 2015 | HCP | anonym | **", format(mean_payment_2015_HCP_anon, big.mark = "'"), "** |
+| Median | alle | alle | beides | **", format(median_payment, big.mark = "'"), "** |
+| Median | 2015 | alle | beides | **", format(median_payment_2015, big.mark = "'"), "** |
+| Median | 2015 | HCO / PO | beides | **", format(median_payment_2015_HCO, big.mark = "'"), "** |
+| Median | 2015 | HCP | beides | **", format(median_payment_2015_HCP, big.mark = "'"), "** |
+| Median | 2015 | HCO / PO | namentlich bekannt | **", format(median_payment_2015_HCO_known, big.mark = "'"), "** |
+| Median | 2015 | HCO / PO | anonym | **", format(median_payment_2015_HCO_anon, big.mark = "'"), "** |
+| Median | 2015 | HCP | namentlich bekannt | **", format(median_payment_2015_HCP_known, big.mark = "'"), "** |
+| Median | 2015 | HCP | anonym | **", format(median_payment_2015_HCP_anon, big.mark = "'"), "** |
+
+## Geldwerte Leistungen für Forschung und Entwicklung
+
+| was | Jahr | Betrag in CHF | Pharmafirma |
+| :-- | ---- | ------------: | ----------- |
+| Gesamtsumme | 2015 | **", format(rd_total, big.mark = "'"), "** | - |
+| höchste Summe | 2015 | **", format(rd_highest, big.mark = "'"), "** | ", with(data_rd, company[which.max(research_and_development)]), " |
+| mittlere Summe | 2015 | **", format(rd_mean, big.mark = "'"), "** | - |
+| mediane Summe | 2015 | **", format(rd_median, big.mark = "'"), "** | - |  
+")
+cat(general_analysis_summary,
+    file = "output/general_analysis_summary.md",
+    append = FALSE)
+```
+
+### Analysis of HCOs/POs
+
+#### Conduct HCOs/PO analysis
+
+```{r hco_analysis}
+# nr of HCO clusters
+nr_of_hco_clusters <-
+  with(data_main %>% filter(payment_receiver_type != "HCP"),
+       n_distinct(payment_receiver_cluster_ID))
+
+nr_of_hco_clusters_domestic <-
+  with(data_main %>% filter(payment_receiver_type != "HCP"
+                            & !is_foreign),
+       n_distinct(payment_receiver_cluster_ID))
+
+nr_of_hco_clusters_foreign <-
+  with(data_main %>% filter(payment_receiver_type != "HCP"
+                            & is_foreign),
+       n_distinct(payment_receiver_cluster_ID))
+
+nr_of_hco_clusters_hospitals <-
+  with(data_main %>% filter(payment_receiver_type != "HCP"
+                            & is_hospital),
+       n_distinct(payment_receiver_cluster_ID))
+
+nr_of_hco_clusters_non_hospitals <-
+  with(data_main %>% filter(payment_receiver_type != "HCP"
+                            & !is_hospital),
+       n_distinct(payment_receiver_cluster_ID))
+
+nr_of_hco_clusters_hospitals_domestic <-
+  with(data_main %>% filter(payment_receiver_type != "HCP"
+                            & is_hospital
+                            & !is_foreign),
+       n_distinct(payment_receiver_cluster_ID))
+
+nr_of_hco_clusters_hospitals_foreign <-
+  with(data_main %>% filter(payment_receiver_type != "HCP"
+                            & is_hospital
+                            & is_foreign),
+       n_distinct(payment_receiver_cluster_ID))
+
+nr_of_hco_clusters_non_hospitals_domestic <-
+  with(data_main %>% filter(payment_receiver_type != "HCP"
+                            & !is_hospital
+                            & !is_foreign),
+       n_distinct(payment_receiver_cluster_ID))
+
+nr_of_hco_clusters_non_hospitals_foreign <-
+  with(data_main %>% filter(payment_receiver_type != "HCP"
+                            & !is_hospital
+                            & is_foreign),
+       n_distinct(payment_receiver_cluster_ID))
+
+
+nr_of_hco_clusters_2015 <-
+  with(data_main %>% filter(payment_receiver_type != "HCP"
+                            & year == 2015),
+       n_distinct(payment_receiver_cluster_ID))
+
+nr_of_hco_clusters_2015_domestic <-
+  with(data_main %>% filter(payment_receiver_type != "HCP"
+                            & !is_foreign
+                            & year == 2015),
+       n_distinct(payment_receiver_cluster_ID))
+
+nr_of_hco_clusters_2015_foreign <-
+  with(data_main %>% filter(payment_receiver_type != "HCP"
+                            & is_foreign
+                            & year == 2015),
+       n_distinct(payment_receiver_cluster_ID))
+
+nr_of_hco_clusters_2015_hospitals <-
+  with(data_main %>% filter(payment_receiver_type != "HCP"
+                            & is_hospital
+                            & year == 2015),
+       n_distinct(payment_receiver_cluster_ID))
+
+nr_of_hco_clusters_2015_non_hospitals <-
+  with(data_main %>% filter(payment_receiver_type != "HCP"
+                            & !is_hospital
+                            & year == 2015),
+       n_distinct(payment_receiver_cluster_ID))
+
+nr_of_hco_clusters_2015_hospitals_domestic <-
+  with(data_main %>% filter(payment_receiver_type != "HCP"
+                            & is_hospital
+                            & !is_foreign
+                            & year == 2015),
+       n_distinct(payment_receiver_cluster_ID))
+
+nr_of_hco_clusters_2015_hospitals_foreign <-
+  with(data_main %>% filter(payment_receiver_type != "HCP"
+                            & is_hospital
+                            & is_foreign
+                            & year == 2015),
+       n_distinct(payment_receiver_cluster_ID))
+
+nr_of_hco_clusters_2015_non_hospitals_domestic <-
+  with(data_main %>% filter(payment_receiver_type != "HCP"
+                            & !is_hospital
+                            & !is_foreign
+                            & year == 2015),
+       n_distinct(payment_receiver_cluster_ID))
+
+nr_of_hco_clusters_2015_non_hospitals_foreign <-
+  with(data_main %>% filter(payment_receiver_type != "HCP"
+                            & !is_hospital
+                            & is_foreign
+                            & year == 2015),
+       n_distinct(payment_receiver_cluster_ID))
+
+
+# nr of HCO superclusters
+nr_of_hco_superclusters <-
+  with(data_main %>% filter(payment_receiver_type != "HCP"),
+       n_distinct(payment_receiver_supercluster_ID))
+
+nr_of_hco_superclusters_domestic <-
+  with(data_main %>% filter(payment_receiver_type != "HCP"
+                            & !is_foreign),
+       n_distinct(payment_receiver_supercluster_ID))
+
+nr_of_hco_superclusters_foreign <-
+  with(data_main %>% filter(payment_receiver_type != "HCP"
+                            & is_foreign),
+       n_distinct(payment_receiver_supercluster_ID))
+
+nr_of_hco_superclusters_hospitals <-
+  with(data_main %>% filter(payment_receiver_type != "HCP"
+                            & is_hospital),
+       n_distinct(payment_receiver_supercluster_ID))
+
+nr_of_hco_superclusters_hospitals_domestic <-
+  with(data_main %>% filter(payment_receiver_type != "HCP"
+                            & is_hospital
+                            & !is_foreign),
+       n_distinct(payment_receiver_supercluster_ID))
+
+nr_of_hco_superclusters_hospitals_foreign <-
+  with(data_main %>% filter(payment_receiver_type != "HCP"
+                            & is_hospital
+                            & is_foreign),
+       n_distinct(payment_receiver_supercluster_ID))
+
+nr_of_hco_superclusters_non_hospitals <-
+  with(data_main %>% filter(payment_receiver_type != "HCP"
+                            & !is_hospital),
+       n_distinct(payment_receiver_supercluster_ID))
+
+nr_of_hco_superclusters_non_hospitals_domestic <-
+  with(data_main %>% filter(payment_receiver_type != "HCP"
+                            & !is_hospital
+                            & !is_foreign),
+       n_distinct(payment_receiver_supercluster_ID))
+
+nr_of_hco_superclusters_non_hospitals_foreign <-
+  with(data_main %>% filter(payment_receiver_type != "HCP"
+                            & !is_hospital
+                            & is_foreign),
+       n_distinct(payment_receiver_supercluster_ID))
+
+
+nr_of_hco_superclusters_2015 <-
+  with(data_main %>% filter(payment_receiver_type != "HCP"
+                            & year == 2015),
+       n_distinct(payment_receiver_supercluster_ID))
+
+nr_of_hco_superclusters_2015_domestic <-
+  with(data_main %>% filter(payment_receiver_type != "HCP"
+                            & year == 2015
+                            & !is_foreign),
+       n_distinct(payment_receiver_supercluster_ID))
+
+nr_of_hco_superclusters_2015_foreign <-
+  with(data_main %>% filter(payment_receiver_type != "HCP"
+                            & year == 2015
+                            & is_foreign),
+       n_distinct(payment_receiver_supercluster_ID))
+
+nr_of_hco_superclusters_2015_hospitals <-
+  with(data_main %>% filter(payment_receiver_type != "HCP"
+                            & is_hospital
+                            & year == 2015),
+       n_distinct(payment_receiver_supercluster_ID))
+
+nr_of_hco_superclusters_2015_hospitals_domestic <-
+  with(data_main %>% filter(payment_receiver_type != "HCP"
+                            & is_hospital
+                            & !is_foreign
+                            & year == 2015),
+       n_distinct(payment_receiver_supercluster_ID))
+
+nr_of_hco_superclusters_2015_hospitals_foreign <-
+  with(data_main %>% filter(payment_receiver_type != "HCP"
+                            & is_hospital
+                            & is_foreign
+                            & year == 2015),
+       n_distinct(payment_receiver_supercluster_ID))
+
+nr_of_hco_superclusters_2015_non_hospitals <-
+  with(data_main %>% filter(payment_receiver_type != "HCP"
+                            & !is_hospital
+                            & year == 2015),
+       n_distinct(payment_receiver_supercluster_ID))
+
+nr_of_hco_superclusters_2015_non_hospitals_domestic <-
+  with(data_main %>% filter(payment_receiver_type != "HCP"
+                            & !is_hospital
+                            & !is_foreign
+                            & year == 2015),
+       n_distinct(payment_receiver_supercluster_ID))
+
+nr_of_hco_superclusters_2015_non_hospitals_foreign <-
+  with(data_main %>% filter(payment_receiver_type != "HCP"
+                            & !is_hospital
+                            & is_foreign
+                            & year == 2015),
+       n_distinct(payment_receiver_supercluster_ID))
+
+
+# total amount
+total_amount_hco <-
+  with(data_main %>% filter(payment_receiver_type != "HCP"),
+       sum(amount_CHF))
+
+total_amount_hco_domestic <-
+  with(data_main %>% filter(payment_receiver_type != "HCP"
+                            & !is_foreign),
+       sum(amount_CHF))
+
+total_amount_hco_foreign <-
+  with(data_main %>% filter(payment_receiver_type != "HCP"
+                            & is_foreign),
+       sum(amount_CHF))
+
+total_amount_hco_known <-
+  with(data_main %>% filter(payment_receiver_type != "HCP"
+                            & !is_anonymous),
+       sum(amount_CHF))
+
+total_amount_hco_anon <-
+  with(data_main %>% filter(payment_receiver_type != "HCP"
+                            & is_anonymous),
+       sum(amount_CHF))
+
+total_amount_hco_hospitals <-
+  with(data_main %>% filter(payment_receiver_type != "HCP"
+                            & is_hospital),
+       sum(amount_CHF))
+
+total_amount_hco_hospitals_domestic <-
+  with(data_main %>% filter(payment_receiver_type != "HCP"
+                            & is_hospital
+                            & !is_foreign),
+       sum(amount_CHF))
+
+total_amount_hco_hospitals_foreign <-
+  with(data_main %>% filter(payment_receiver_type != "HCP"
+                            & is_hospital
+                            & is_foreign),
+       sum(amount_CHF))
+
+total_amount_hco_non_hospitals <-
+  with(data_main %>% filter(payment_receiver_type != "HCP"
+                            & !is_hospital),
+       sum(amount_CHF))
+
+total_amount_hco_non_hospitals_domestic <-
+  with(data_main %>% filter(payment_receiver_type != "HCP"
+                            & !is_hospital
+                            & !is_foreign),
+       sum(amount_CHF))
+
+total_amount_hco_non_hospitals_foreign <-
+  with(data_main %>% filter(payment_receiver_type != "HCP"
+                            & !is_hospital
+                            & is_foreign),
+       sum(amount_CHF))
+
+
+total_amount_hco_2015_domestic <-
+  with(data_main %>% filter(payment_receiver_type != "HCP"
+                            & !is_foreign
+                            & year == 2015),
+       sum(amount_CHF))
+
+total_amount_hco_2015_foreign <-
+  with(data_main %>% filter(payment_receiver_type != "HCP"
+                            & is_foreign
+                            & year == 2015),
+       sum(amount_CHF))
+
+total_amount_hco_2015_hospitals <-
+  with(data_main %>% filter(payment_receiver_type != "HCP"
+                            & is_hospital
+                            & year == 2015),
+       sum(amount_CHF))
+
+total_amount_hco_2015_hospitals_domestic <-
+  with(data_main %>% filter(payment_receiver_type != "HCP"
+                            & is_hospital
+                            & !is_foreign
+                            & year == 2015),
+       sum(amount_CHF))
+
+total_amount_hco_2015_hospitals_foreign <-
+  with(data_main %>% filter(payment_receiver_type != "HCP"
+                            & is_hospital
+                            & is_foreign
+                            & year == 2015),
+       sum(amount_CHF))
+
+total_amount_hco_2015_non_hospitals <-
+  with(data_main %>% filter(payment_receiver_type != "HCP"
+                            & !is_hospital
+                            & year == 2015),
+       sum(amount_CHF))
+
+total_amount_hco_2015_non_hospitals_domestic <-
+  with(data_main %>% filter(payment_receiver_type != "HCP"
+                            & !is_hospital
+                            & !is_foreign
+                            & year == 2015),
+       sum(amount_CHF))
+
+total_amount_hco_2015_non_hospitals_foreign <-
+  with(data_main %>% filter(payment_receiver_type != "HCP"
+                            & !is_hospital
+                            & is_foreign
+                            & year == 2015),
+       sum(amount_CHF))
+
+
+# nr of payments
+nr_of_payments_hco <-
+  nrow(data_main %>% filter(payment_receiver_type != "HCP"))
+
+nr_of_payments_hco_domestic <-
+  nrow(data_main %>% filter(payment_receiver_type != "HCP"
+                            & !is_foreign))
+
+nr_of_payments_hco_foreign <-
+  nrow(data_main %>% filter(payment_receiver_type != "HCP"
+                            & is_foreign))
+
+nr_of_payments_hco_known <-
+  nrow(data_main %>% filter(payment_receiver_type != "HCP"
+                            & !is_anonymous))
+
+nr_of_payments_hco_anon <-
+  nrow(data_main %>% filter(payment_receiver_type != "HCP"
+                            & is_anonymous))
+
+nr_of_payments_hco_hospitals <-
+  nrow(data_main %>% filter(payment_receiver_type != "HCP"
+                            & is_hospital))
+
+nr_of_payments_hco_hospitals_domestic <-
+  nrow(data_main %>% filter(payment_receiver_type != "HCP"
+                            & is_hospital
+                            & !is_foreign))
+
+nr_of_payments_hco_hospitals_foreign <-
+  nrow(data_main %>% filter(payment_receiver_type != "HCP"
+                            & is_hospital
+                            & is_foreign))
+
+nr_of_payments_hco_non_hospitals <-
+  nrow(data_main %>% filter(payment_receiver_type != "HCP"
+                            & !is_hospital))
+
+nr_of_payments_hco_non_hospitals_domestic <-
+  nrow(data_main %>% filter(payment_receiver_type != "HCP"
+                            & !is_hospital
+                            & !is_foreign))
+
+nr_of_payments_hco_non_hospitals_foreign <-
+  nrow(data_main %>% filter(payment_receiver_type != "HCP"
+                            & !is_hospital
+                            & is_foreign))
+
+nr_of_payments_hco_2015 <-
+  nrow(data_main %>% filter(payment_receiver_type != "HCP"
+                            & year == 2015))
+
+nr_of_payments_hco_2015_domestic <-
+  nrow(data_main %>% filter(payment_receiver_type != "HCP"
+                            & !is_foreign
+                            & year == 2015))
+
+nr_of_payments_hco_2015_foreign <-
+  nrow(data_main %>% filter(payment_receiver_type != "HCP"
+                            & is_foreign
+                            & year == 2015))
+
+nr_of_payments_hco_2015_known <-
+  nrow(data_main %>% filter(payment_receiver_type != "HCP"
+                            & !is_anonymous
+                            & year == 2015))
+
+nr_of_payments_hco_2015_anon <-
+  nrow(data_main %>% filter(payment_receiver_type != "HCP"
+                            & is_anonymous
+                            & year == 2015))
+
+nr_of_payments_hco_2015_hospitals <-
+  nrow(data_main %>% filter(payment_receiver_type != "HCP"
+                            & is_hospital
+                            & year == 2015))
+
+nr_of_payments_hco_2015_hospitals_domestic <-
+  nrow(data_main %>% filter(payment_receiver_type != "HCP"
+                            & is_hospital
+                            & !is_foreign
+                            & year == 2015))
+
+nr_of_payments_hco_2015_hospitals_foreign <-
+  nrow(data_main %>% filter(payment_receiver_type != "HCP"
+                            & is_hospital
+                            & is_foreign
+                            & year == 2015))
+
+nr_of_payments_hco_2015_non_hospitals <-
+  nrow(data_main %>% filter(payment_receiver_type != "HCP"
+                            & !is_hospital
+                            & year == 2015))
+
+nr_of_payments_hco_2015_non_hospitals_domestic <-
+  nrow(data_main %>% filter(payment_receiver_type != "HCP"
+                            & !is_hospital
+                            & !is_foreign
+                            & year == 2015))
+
+nr_of_payments_hco_2015_non_hospitals_foreign <-
+  nrow(data_main %>% filter(payment_receiver_type != "HCP"
+                            & !is_hospital
+                            & is_foreign
+                            & year == 2015))
+
+
+# payment sum and number of payments per HCO cluster
+cluster_payment_summary_hco_2015 <-
+  data_main %>%
+  filter(year == 2015
+         & payment_receiver_type != "HCP") %>%
+  group_by(payment_receiver_cluster,
+           is_hospital,
+           is_foreign) %>%
+  summarise(total_amount_CHF = sum(amount_CHF),
+            nr_of_payments = n(),
+            nr_of_pharma_companies = n_distinct(company_ID)) %>%
+  arrange(desc(total_amount_CHF)) %>%
+  ungroup()
+
+write.csv(x = cluster_payment_summary_hco_2015,
+          file = "output/cluster_payment_summary_hco_2015_by_amount.csv",
+          fileEncoding = "utf8",
+          row.names = FALSE,
+          na = "")
+
+## ordered by nr of payments
+# cluster_payment_summary_hco_2015 %>%
+#   arrange(desc(nr_of_payments)) %>%
+#   write.csv(file = "output/cluster_payment_summary_hco_2015_by_nr_of_payments.csv",
+#             fileEncoding = "utf8",
+#             row.names = FALSE,
+#             na = "")
+
+## without anonymous payments
+cluster_payment_summary_hco_2015_non_anon <-
+  cluster_payment_summary_hco_2015 %>%
+  filter(payment_receiver_cluster != "Anonym")
+
+## only domestic
+cluster_payment_summary_hco_2015_domestic <-
+  cluster_payment_summary_hco_2015 %>%
+  filter(!is_foreign)
+
+## only foreign
+cluster_payment_summary_hco_2015_foreign <-
+  cluster_payment_summary_hco_2015 %>%
+  filter(is_foreign)
+
+## only hospitals
+cluster_payment_summary_hco_2015_hospitals <-
+  cluster_payment_summary_hco_2015 %>%
+  filter(is_hospital)
+
+## only domestic hospitals
+cluster_payment_summary_hco_2015_hospitals_domestic <-
+  cluster_payment_summary_hco_2015 %>%
+  filter(is_hospital
+         & !is_foreign)
+
+## only foreign hospitals
+cluster_payment_summary_hco_2015_hospitals_foreign <-
+  cluster_payment_summary_hco_2015 %>%
+  filter(is_hospital
+         & is_foreign)
+
+## only non-hospitals
+cluster_payment_summary_hco_2015_non_hospitals <-
+  cluster_payment_summary_hco_2015 %>%
+  filter(!is_hospital)
+
+## only domestic non-hospitals
+cluster_payment_summary_hco_2015_non_hospitals_domestic <-
+  cluster_payment_summary_hco_2015 %>%
+  filter(!is_hospital
+         & !is_foreign)
+
+## only foreign non-hospitals
+cluster_payment_summary_hco_2015_non_hospitals_foreign <-
+  cluster_payment_summary_hco_2015 %>%
+  filter(!is_hospital
+         & is_foreign)
+
+
+# payment sum and number of payments per HCO supercluster, ordered by amount
+supercluster_payment_summary_hco_2015 <-
+  data_main %>%
+  filter(year == 2015
+         & payment_receiver_type != "HCP") %>%
+  group_by(payment_receiver_supercluster) %>%
+  summarise(is_hospital = TRUE %in% is_hospital,
+            is_foreign = TRUE %in% is_foreign,
+            total_amount_CHF = sum(amount_CHF),
+            nr_of_payments = n(),
+            nr_of_pharma_companies = n_distinct(company_ID)) %>%
+  arrange(desc(total_amount_CHF)) %>%
+  ungroup()
+
+supercluster_payment_summary_hco_2015$is_hospital[supercluster_payment_summary_hco_2015$payment_receiver_supercluster == "Anonym"] <- NA
+supercluster_payment_summary_hco_2015$is_foreign[supercluster_payment_summary_hco_2015$payment_receiver_supercluster == "Anonym"] <- NA
+
+write.csv(x = supercluster_payment_summary_hco_2015,
+          file = "output/supercluster_payment_summary_hco_2015_by_amount.csv",
+          fileEncoding = "utf8",
+          row.names = FALSE,
+          na = "")
+
+## ordered by nr of payments
+# supercluster_payment_summary_hco_2015 %>%
+#   arrange(desc(nr_of_payments)) %>%
+#   write.csv(file = "output/supercluster_payment_summary_hco_2015_by_nr_of_payments.csv",
+#             fileEncoding = "utf8",
+#             row.names = FALSE,
+#             na = "")
+
+## without anonymous payments
+supercluster_payment_summary_hco_2015_non_anon <-
+  supercluster_payment_summary_hco_2015 %>%
+  filter(payment_receiver_supercluster != "Anonym")
+
+## only domestic
+supercluster_payment_summary_hco_2015_domestic <-
+  supercluster_payment_summary_hco_2015 %>%
+  filter(!is_hospital)
+
+## only foreign
+supercluster_payment_summary_hco_2015_foreign <-
+  supercluster_payment_summary_hco_2015 %>%
+  filter(is_hospital)
+
+## only hospitals
+supercluster_payment_summary_hco_2015_hospitals <-
+  supercluster_payment_summary_hco_2015 %>%
+  filter(is_hospital)
+
+### only domestic hospitals
+supercluster_payment_summary_hco_2015_hospitals_domestic <-
+  supercluster_payment_summary_hco_2015 %>%
+  filter(is_hospital
+         & !is_foreign)
+
+### only foreign hospitals
+supercluster_payment_summary_hco_2015_hospitals_foreign <-
+  supercluster_payment_summary_hco_2015 %>%
+  filter(is_hospital
+         & is_foreign)
+
+## only non-hospitals
+supercluster_payment_summary_hco_2015_non_hospitals <-
+  supercluster_payment_summary_hco_2015 %>%
+  filter(!is_hospital)
+
+### only domestic non-hospitals
+supercluster_payment_summary_hco_2015_non_hospitals_domestic <-
+  supercluster_payment_summary_hco_2015 %>%
+  filter(!is_hospital
+         & !is_foreign)
+
+### only foreign non-hospitals
+supercluster_payment_summary_hco_2015_non_hospitals_foreign <-
+  supercluster_payment_summary_hco_2015 %>%
+  filter(!is_hospital
+         & is_foreign)
+```
+
+#### Create summary of HCOs/PO analysis
+
+```{r hco_analysis_summary}
+hco_analysis_summary <-
+  paste0(
+"# HCO/PO-Analyse
+
+**Hinweise:**
+
+- Um untenstehende Werte zu berechnen, müssen die Zahlungsempfänger zuvor dedupliziert worden sein (was der Fall ist bei den Daten in diesem Repository).
+
+- Zahlungen von Pharmafirmen, [welche es versäumten](https://docs.google.com/spreadsheets/d/15fnfNlBpNlsK2x1881r33cRCuU1gS0r29HgApltoLWA#gid=1658350066), die relevanten Informationen offenzulegen, bleiben in den untenstehenden Werten unberücksichtigt.
+
+## Anzahl HCO/PO-Cluster
+
+| Jahr | Clustering-Stufe | Spitäler / andere | inländisch / international | Anzahl HCO/PO-Cluster |
+| ---- | ---------------- | ----------------- | -------------------------- | --------------------: |
+| alle | Clusters | beides | beides | **", format(nr_of_hco_clusters, big.mark = "'"), "** |
+| alle | Clusters | beides | inländisch | **", format(nr_of_hco_clusters_domestic, big.mark = "'"), "** |
+| alle | Clusters | beides | international | **", format(nr_of_hco_clusters_foreign, big.mark = "'"), "** |
+| alle | Clusters | Spitäler | beides | **", format(nr_of_hco_clusters_hospitals, big.mark = "'"), "** |
+| alle | Clusters | Spitäler | inländisch | **", format(nr_of_hco_clusters_hospitals_domestic, big.mark = "'"), "** |
+| alle | Clusters | Spitäler | international | **", format(nr_of_hco_clusters_hospitals_foreign, big.mark = "'"), "** |
+| alle | Clusters | andere | beides | **", format(nr_of_hco_clusters_non_hospitals, big.mark = "'"), "** |
+| alle | Clusters | andere | inländisch | **", format(nr_of_hco_clusters_non_hospitals_domestic, big.mark = "'"), "** |
+| alle | Clusters | andere | international | **", format(nr_of_hco_clusters_non_hospitals_foreign, big.mark = "'"), "** |
+| alle | Superclusters | beides | beides | **", format(nr_of_hco_superclusters, big.mark = "'"), "** |
+| alle | Superclusters | beides | inländisch | **", format(nr_of_hco_superclusters_domestic, big.mark = "'"), "** |
+| alle | Superclusters | beides | international | **", format(nr_of_hco_superclusters_foreign, big.mark = "'"), "** |
+| alle | Superclusters | Spitäler | beides | **", format(nr_of_hco_superclusters_hospitals, big.mark = "'"), "** |
+| alle | Superclusters | Spitäler | inländisch | **", format(nr_of_hco_superclusters_hospitals_domestic, big.mark = "'"), "** |
+| alle | Superclusters | Spitäler | international | **", format(nr_of_hco_superclusters_hospitals_foreign, big.mark = "'"), "** |
+| alle | Superclusters | andere | beides | **", format(nr_of_hco_superclusters_non_hospitals, big.mark = "'"), "** |
+| alle | Superclusters | andere | inländisch | **", format(nr_of_hco_superclusters_non_hospitals_domestic, big.mark = "'"), "** |
+| alle | Superclusters | andere | international | **", format(nr_of_hco_superclusters_non_hospitals_foreign, big.mark = "'"), "** |
+| 2015 | Clusters | beides | beides | **", format(nr_of_hco_clusters_2015, big.mark = "'"), "** |
+| 2015 | Clusters | beides | inländisch | **", format(nr_of_hco_clusters_2015_domestic, big.mark = "'"), "** |
+| 2015 | Clusters | beides | international | **", format(nr_of_hco_clusters_2015_foreign, big.mark = "'"), "** |
+| 2015 | Clusters | Spitäler | beides | **", format(nr_of_hco_clusters_2015_hospitals, big.mark = "'"), "** |
+| 2015 | Clusters | Spitäler | inländisch | **", format(nr_of_hco_clusters_2015_hospitals_domestic, big.mark = "'"), "** |
+| 2015 | Clusters | Spitäler | international | **", format(nr_of_hco_clusters_2015_hospitals_foreign, big.mark = "'"), "** |
+| 2015 | Clusters | andere | beides | **", format(nr_of_hco_clusters_2015_non_hospitals, big.mark = "'"), "** |
+| 2015 | Clusters | andere | inländisch | **", format(nr_of_hco_clusters_2015_non_hospitals_domestic, big.mark = "'"), "** |
+| 2015 | Clusters | andere | international | **", format(nr_of_hco_clusters_2015_non_hospitals_foreign, big.mark = "'"), "** |
+| 2015 | Superclusters | beides | beides | **", format(nr_of_hco_superclusters_2015, big.mark = "'"), "** |
+| 2015 | Superclusters | beides | inländisch | **", format(nr_of_hco_superclusters_2015_domestic, big.mark = "'"), "** |
+| 2015 | Superclusters | beides | international | **", format(nr_of_hco_superclusters_2015_foreign, big.mark = "'"), "** |
+| 2015 | Superclusters | Spitäler | beides | **", format(nr_of_hco_superclusters_2015_hospitals, big.mark = "'"), "** |
+| 2015 | Superclusters | Spitäler | inländisch | **", format(nr_of_hco_superclusters_2015_hospitals_domestic, big.mark = "'"), "** |
+| 2015 | Superclusters | Spitäler | international | **", format(nr_of_hco_superclusters_2015_hospitals_foreign, big.mark = "'"), "** |
+| 2015 | Superclusters | andere | beides | **", format(nr_of_hco_superclusters_2015_non_hospitals, big.mark = "'"), "** |
+| 2015 | Superclusters | andere | inländisch | **", format(nr_of_hco_superclusters_2015_non_hospitals_domestic, big.mark = "'"), "** |
+| 2015 | Superclusters | andere | international | **", format(nr_of_hco_superclusters_2015_non_hospitals_foreign, big.mark = "'"), "** |
+
+## Gesamtsumme
+
+| Jahr | Spitäler / andere | inländisch / international | anonym / namentlich bekannt | Summe in CHF |
+| ---- | ----------------- | -------------------------- | --------------------------- | -----------: |
+| alle | beides | beides | beides | **", format(total_amount_hco, big.mark = "'"), "** |
+| alle | beides | beides | namentlich bekannt | **", format(total_amount_hco_known, big.mark = "'"), "** |
+| alle | beides | beides | anonym | **", format(total_amount_hco_anon, big.mark = "'"), "** |
+| alle | beides | inländisch | namentlich bekannt | **", format(total_amount_hco_domestic, big.mark = "'"), "** |
+| alle | beides | international | namentlich bekannt | **", format(total_amount_hco_foreign, big.mark = "'"), "** |
+| alle | Spitäler | beides | namentlich bekannt | **", format(total_amount_hco_hospitals, big.mark = "'"), "** |
+| alle | Spitäler | inländisch | namentlich bekannt | **", format(total_amount_hco_hospitals_domestic, big.mark = "'"), "** |
+| alle | Spitäler | international | namentlich bekannt | **", format(total_amount_hco_hospitals_foreign, big.mark = "'"), "** |
+| alle | andere | beides | namentlich bekannt | **", format(total_amount_hco_non_hospitals, big.mark = "'"), "** |
+| alle | andere | inländisch | namentlich bekannt | **", format(total_amount_hco_non_hospitals_domestic, big.mark = "'"), "** |
+| alle | andere | international | namentlich bekannt | **", format(total_amount_hco_non_hospitals_foreign, big.mark = "'"), "** |
+| 2015 | beides | beides | beides | **", format(sum_total_2015_HCO, big.mark = "'"), "** |
+| 2015 | beides | beides | namentlich bekannt | **", format(sum_total_2015_HCO_known, big.mark = "'"), "** |
+| 2015 | beides | beides | anonym | **", format(sum_total_2015_HCO_anon, big.mark = "'"), "** |
+| 2015 | beides | inländisch | namentlich bekannt | **", format(total_amount_hco_2015_domestic, big.mark = "'"), "** |
+| 2015 | beides | international | namentlich bekannt | **", format(total_amount_hco_2015_foreign, big.mark = "'"), "** |
+| 2015 | Spitäler | beides | namentlich bekannt | **", format(total_amount_hco_2015_hospitals, big.mark = "'"), "** |
+| 2015 | Spitäler | inländisch | namentlich bekannt | **", format(total_amount_hco_2015_hospitals_domestic, big.mark = "'"), "** |
+| 2015 | Spitäler | international | namentlich bekannt | **", format(total_amount_hco_2015_hospitals_foreign, big.mark = "'"), "** |
+| 2015 | andere | beides | namentlich bekannt | **", format(total_amount_hco_2015_non_hospitals, big.mark = "'"), "** |
+| 2015 | andere | inländisch | namentlich bekannt | **", format(total_amount_hco_2015_non_hospitals_domestic, big.mark = "'"), "** |
+| 2015 | andere | international | namentlich bekannt | **", format(total_amount_hco_2015_non_hospitals_foreign, big.mark = "'"), "** |
+
+## Anzahl Zahlungen
+
+**Hinweis:**
+
+Werte, welche anonyme Zahlungen beinhalten (die durchgestrichenen), müssen mit Vorsicht behandelt werden, da sie äusserst unpräzise sind.  
+
+| Jahr | Spitäler / andere | inländisch / international | anonym / namentlich bekannt | Anzahl Zahlungen |
+| ---- | ----------------- | -------------------------- | --------------------------- | ---------------: |
+| alle | beides | beides | beides | ~~", format(nr_of_payments_hco, big.mark = "'"), "~~ |
+| alle | beides | beides | namentlich bekannt | **", format(nr_of_payments_hco_known, big.mark = "'"), "** |
+| alle | beides | beides | anonym | ~~", format(nr_of_payments_hco_anon, big.mark = "'"), "~~ |
+| alle | beides | inländisch | namentlich bekannt | **", format(nr_of_payments_hco_domestic, big.mark = "'"), "** |
+| alle | beides | international | namentlich bekannt | **", format(nr_of_payments_hco_foreign, big.mark = "'"), "** |
+| alle | Spitäler | beides | namentlich bekannt | **", format(nr_of_payments_hco_hospitals, big.mark = "'"), "** |
+| alle | Spitäler | inländisch | namentlich bekannt | **", format(nr_of_payments_hco_hospitals_domestic, big.mark = "'"), "** |
+| alle | Spitäler | international | namentlich bekannt | **", format(nr_of_payments_hco_hospitals_foreign, big.mark = "'"), "** |
+| alle | andere | beides | namentlich bekannt | **", format(nr_of_payments_hco_non_hospitals, big.mark = "'"), "** |
+| alle | andere | inländisch | namentlich bekannt | **", format(nr_of_payments_hco_non_hospitals_domestic, big.mark = "'"), "** |
+| alle | andere | international | namentlich bekannt | **", format(nr_of_payments_hco_non_hospitals_foreign, big.mark = "'"), "** |
+| 2015 | beides | beides | beides | ~~", format(nr_of_payments_hco_2015, big.mark = "'"), "~~ |
+| 2015 | beides | beides | namentlich bekannt | **", format(nr_of_payments_hco_2015_known, big.mark = "'"), "** |
+| 2015 | beides | beides | anonym | ~~", format(nr_of_payments_hco_2015_anon, big.mark = "'"), "~~ |
+| 2015 | beides | inländisch | namentlich bekannt | **", format(nr_of_payments_hco_2015_domestic, big.mark = "'"), "** |
+| 2015 | beides | international | namentlich bekannt | **", format(nr_of_payments_hco_2015_foreign, big.mark = "'"), "** |
+| 2015 | Spitäler | beides | namentlich bekannt | **", format(nr_of_payments_hco_2015_hospitals, big.mark = "'"), "** |
+| 2015 | Spitäler | inländisch | namentlich bekannt | **", format(nr_of_payments_hco_2015_hospitals_domestic, big.mark = "'"), "** |
+| 2015 | Spitäler | international | namentlich bekannt | **", format(nr_of_payments_hco_2015_hospitals_foreign, big.mark = "'"), "** |
+| 2015 | andere | beides | namentlich bekannt | **", format(nr_of_payments_hco_2015_non_hospitals, big.mark = "'"), "** |
+| 2015 | andere | inländisch | namentlich bekannt | **", format(nr_of_payments_hco_2015_non_hospitals_domestic, big.mark = "'"), "** |
+| 2015 | andere | international | namentlich bekannt | **", format(nr_of_payments_hco_2015_non_hospitals_foreign, big.mark = "'"), "** |
+
+## Übersicht über Zahlungen an namentlich bekannte HCO/PO 2015
+
+| was | Clustering-Stufe | Spitäler / andere | inländisch / international | Wert | Anzahl beitragender Pharmafirmen | Empfänger-HCO/PO |
+| --- | ---------------- | ----------------- | -------------------------- | ---: | -------------------------------: | ---------------- |
+| höchste Gesamtsumme in CHF | Clusters | beides | beides | **", format(max(cluster_payment_summary_hco_2015_non_anon$total_amount_CHF), big.mark = "'"), "** | ", cluster_payment_summary_hco_2015_non_anon$nr_of_pharma_companies[which.max(cluster_payment_summary_hco_2015_non_anon$total_amount_CHF)], " | ", cluster_payment_summary_hco_2015_non_anon$payment_receiver_cluster[which.max(cluster_payment_summary_hco_2015_non_anon$total_amount_CHF)], " |
+| höchste Gesamtsumme in CHF | Clusters | beides | inländisch | **", format(max(cluster_payment_summary_hco_2015_domestic$total_amount_CHF), big.mark = "'"), "** | ", cluster_payment_summary_hco_2015_domestic$nr_of_pharma_companies[which.max(cluster_payment_summary_hco_2015_domestic$total_amount_CHF)], " | ", cluster_payment_summary_hco_2015_domestic$payment_receiver_cluster[which.max(cluster_payment_summary_hco_2015_domestic$total_amount_CHF)], " |
+| höchste Gesamtsumme in CHF | Clusters | beides | international | **", format(max(cluster_payment_summary_hco_2015_foreign$total_amount_CHF), big.mark = "'"), "** | ", cluster_payment_summary_hco_2015_foreign$nr_of_pharma_companies[which.max(cluster_payment_summary_hco_2015_foreign$total_amount_CHF)], " | ", cluster_payment_summary_hco_2015_foreign$payment_receiver_cluster[which.max(cluster_payment_summary_hco_2015_foreign$total_amount_CHF)], " |
+| höchste Gesamtsumme in CHF | Clusters | Spitäler | beides | **", format(max(cluster_payment_summary_hco_2015_hospitals$total_amount_CHF), big.mark = "'"), "** | ", cluster_payment_summary_hco_2015_hospitals$nr_of_pharma_companies[which.max(cluster_payment_summary_hco_2015_hospitals$total_amount_CHF)], " | ", cluster_payment_summary_hco_2015_hospitals$payment_receiver_cluster[which.max(cluster_payment_summary_hco_2015_hospitals$total_amount_CHF)], " |
+| höchste Gesamtsumme in CHF | Clusters | Spitäler | inländisch | **", format(max(cluster_payment_summary_hco_2015_hospitals_domestic$total_amount_CHF), big.mark = "'"), "** | ", cluster_payment_summary_hco_2015_hospitals_domestic$nr_of_pharma_companies[which.max(cluster_payment_summary_hco_2015_hospitals_domestic$total_amount_CHF)], " | ", cluster_payment_summary_hco_2015_hospitals_domestic$payment_receiver_cluster[which.max(cluster_payment_summary_hco_2015_hospitals_domestic$total_amount_CHF)], " |
+| höchste Gesamtsumme in CHF | Clusters | Spitäler | international | **", format(max(cluster_payment_summary_hco_2015_hospitals_foreign$total_amount_CHF), big.mark = "'"), "** | ", cluster_payment_summary_hco_2015_hospitals_foreign$nr_of_pharma_companies[which.max(cluster_payment_summary_hco_2015_hospitals_foreign$total_amount_CHF)], " | ", cluster_payment_summary_hco_2015_hospitals_foreign$payment_receiver_cluster[which.max(cluster_payment_summary_hco_2015_hospitals_foreign$total_amount_CHF)], " |
+| höchste Gesamtsumme in CHF | Clusters | andere | beides | **", format(max(cluster_payment_summary_hco_2015_non_hospitals$total_amount_CHF), big.mark = "'"), "** | ", cluster_payment_summary_hco_2015_non_hospitals$nr_of_pharma_companies[which.max(cluster_payment_summary_hco_2015_non_hospitals$total_amount_CHF)], " | ", cluster_payment_summary_hco_2015_non_hospitals$payment_receiver_cluster[which.max(cluster_payment_summary_hco_2015_non_hospitals$total_amount_CHF)], " |
+| höchste Gesamtsumme in CHF | Clusters | andere | inländisch | **", format(max(cluster_payment_summary_hco_2015_non_hospitals_domestic$total_amount_CHF), big.mark = "'"), "** | ", cluster_payment_summary_hco_2015_non_hospitals_domestic$nr_of_pharma_companies[which.max(cluster_payment_summary_hco_2015_non_hospitals_domestic$total_amount_CHF)], " | ", cluster_payment_summary_hco_2015_non_hospitals_domestic$payment_receiver_cluster[which.max(cluster_payment_summary_hco_2015_non_hospitals_domestic$total_amount_CHF)], " |
+| höchste Gesamtsumme in CHF | Clusters | andere | international | **", format(max(cluster_payment_summary_hco_2015_non_hospitals_foreign$total_amount_CHF), big.mark = "'"), "** | ", cluster_payment_summary_hco_2015_non_hospitals_foreign$nr_of_pharma_companies[which.max(cluster_payment_summary_hco_2015_non_hospitals_foreign$total_amount_CHF)], " | ", cluster_payment_summary_hco_2015_non_hospitals_foreign$payment_receiver_cluster[which.max(cluster_payment_summary_hco_2015_non_hospitals_foreign$total_amount_CHF)], " |
+| höchste Gesamtsumme in CHF | Superclusters | beides | beides | **", format(max(supercluster_payment_summary_hco_2015_non_anon$total_amount_CHF), big.mark = "'"), "** | ", supercluster_payment_summary_hco_2015_non_anon$nr_of_pharma_companies[which.max(supercluster_payment_summary_hco_2015_non_anon$total_amount_CHF)], " | ", supercluster_payment_summary_hco_2015_non_anon$payment_receiver_supercluster[which.max(supercluster_payment_summary_hco_2015_non_anon$total_amount_CHF)], " |
+| höchste Gesamtsumme in CHF | Superclusters | beides | inländisch | **", format(max(supercluster_payment_summary_hco_2015_domestic$total_amount_CHF), big.mark = "'"), "** | ", supercluster_payment_summary_hco_2015_domestic$nr_of_pharma_companies[which.max(supercluster_payment_summary_hco_2015_domestic$total_amount_CHF)], " | ", supercluster_payment_summary_hco_2015_domestic$payment_receiver_supercluster[which.max(supercluster_payment_summary_hco_2015_domestic$total_amount_CHF)], " |
+| höchste Gesamtsumme in CHF | Superclusters | beides | international | **", format(max(supercluster_payment_summary_hco_2015_foreign$total_amount_CHF), big.mark = "'"), "** | ", supercluster_payment_summary_hco_2015_foreign$nr_of_pharma_companies[which.max(supercluster_payment_summary_hco_2015_foreign$total_amount_CHF)], " | ", supercluster_payment_summary_hco_2015_foreign$payment_receiver_supercluster[which.max(supercluster_payment_summary_hco_2015_foreign$total_amount_CHF)], " |
+| höchste Gesamtsumme in CHF | Superclusters | Spitäler | beides | **", format(max(supercluster_payment_summary_hco_2015_hospitals$total_amount_CHF), big.mark = "'"), "** | ", supercluster_payment_summary_hco_2015_hospitals$nr_of_pharma_companies[which.max(supercluster_payment_summary_hco_2015_hospitals$total_amount_CHF)], " | ", supercluster_payment_summary_hco_2015_hospitals$payment_receiver_supercluster[which.max(supercluster_payment_summary_hco_2015_hospitals$total_amount_CHF)], " |
+| höchste Gesamtsumme in CHF | Superclusters | Spitäler | inländisch | **", format(max(supercluster_payment_summary_hco_2015_hospitals_domestic$total_amount_CHF), big.mark = "'"), "** | ", supercluster_payment_summary_hco_2015_hospitals_domestic$nr_of_pharma_companies[which.max(supercluster_payment_summary_hco_2015_hospitals_domestic$total_amount_CHF)], " | ", supercluster_payment_summary_hco_2015_hospitals_domestic$payment_receiver_supercluster[which.max(supercluster_payment_summary_hco_2015_hospitals_domestic$total_amount_CHF)], " |
+| höchste Gesamtsumme in CHF | Superclusters | Spitäler | international | **", format(max(supercluster_payment_summary_hco_2015_hospitals_foreign$total_amount_CHF), big.mark = "'"), "** | ", supercluster_payment_summary_hco_2015_hospitals_foreign$nr_of_pharma_companies[which.max(supercluster_payment_summary_hco_2015_hospitals_foreign$total_amount_CHF)], " | ", supercluster_payment_summary_hco_2015_hospitals_foreign$payment_receiver_supercluster[which.max(supercluster_payment_summary_hco_2015_hospitals_foreign$total_amount_CHF)], " |
+| höchste Gesamtsumme in CHF | Superclusters | andere | beides | **", format(max(supercluster_payment_summary_hco_2015_non_hospitals$total_amount_CHF), big.mark = "'"), "** | ", supercluster_payment_summary_hco_2015_non_hospitals$nr_of_pharma_companies[which.max(supercluster_payment_summary_hco_2015_non_hospitals$total_amount_CHF)], " | ", supercluster_payment_summary_hco_2015_non_hospitals$payment_receiver_supercluster[which.max(supercluster_payment_summary_hco_2015_non_hospitals$total_amount_CHF)], " |
+| höchste Gesamtsumme in CHF | Superclusters | andere | inländisch | **", format(max(supercluster_payment_summary_hco_2015_non_hospitals_domestic$total_amount_CHF), big.mark = "'"), "** | ", supercluster_payment_summary_hco_2015_non_hospitals_domestic$nr_of_pharma_companies[which.max(supercluster_payment_summary_hco_2015_non_hospitals_domestic$total_amount_CHF)], " | ", supercluster_payment_summary_hco_2015_non_hospitals_domestic$payment_receiver_supercluster[which.max(supercluster_payment_summary_hco_2015_non_hospitals_domestic$total_amount_CHF)], " |
+| höchste Gesamtsumme in CHF | Superclusters | andere | international | **", format(max(supercluster_payment_summary_hco_2015_non_hospitals_foreign$total_amount_CHF), big.mark = "'"), "** | ", supercluster_payment_summary_hco_2015_non_hospitals_foreign$nr_of_pharma_companies[which.max(supercluster_payment_summary_hco_2015_non_hospitals_foreign$total_amount_CHF)], " | ", supercluster_payment_summary_hco_2015_non_hospitals_foreign$payment_receiver_supercluster[which.max(supercluster_payment_summary_hco_2015_non_hospitals_foreign$total_amount_CHF)], " |
+| tiefste Gesamtsumme in CHF | Clusters | beides | beides | **", format(min(cluster_payment_summary_hco_2015_non_anon$total_amount_CHF), big.mark = "'"), "** | ", cluster_payment_summary_hco_2015_non_anon$nr_of_pharma_companies[which.min(cluster_payment_summary_hco_2015_non_anon$total_amount_CHF)], " | ", cluster_payment_summary_hco_2015_non_anon$payment_receiver_cluster[which.min(cluster_payment_summary_hco_2015_non_anon$total_amount_CHF)], " |
+| tiefste Gesamtsumme in CHF | Clusters | beides | inländisch | **", format(min(cluster_payment_summary_hco_2015_domestic$total_amount_CHF), big.mark = "'"), "** | ", cluster_payment_summary_hco_2015_domestic$nr_of_pharma_companies[which.min(cluster_payment_summary_hco_2015_domestic$total_amount_CHF)], " | ", cluster_payment_summary_hco_2015_domestic$payment_receiver_cluster[which.min(cluster_payment_summary_hco_2015_domestic$total_amount_CHF)], " |
+| tiefste Gesamtsumme in CHF | Clusters | beides | international | **", format(min(cluster_payment_summary_hco_2015_foreign$total_amount_CHF), big.mark = "'"), "** | ", cluster_payment_summary_hco_2015_foreign$nr_of_pharma_companies[which.min(cluster_payment_summary_hco_2015_foreign$total_amount_CHF)], " | ", cluster_payment_summary_hco_2015_foreign$payment_receiver_cluster[which.min(cluster_payment_summary_hco_2015_foreign$total_amount_CHF)], " |
+| tiefste Gesamtsumme in CHF | Clusters | Spitäler | beides | **", format(min(cluster_payment_summary_hco_2015_hospitals$total_amount_CHF), big.mark = "'"), "** | ", cluster_payment_summary_hco_2015_hospitals$nr_of_pharma_companies[which.min(cluster_payment_summary_hco_2015_hospitals$total_amount_CHF)], " | ", cluster_payment_summary_hco_2015_hospitals$payment_receiver_cluster[which.min(cluster_payment_summary_hco_2015_hospitals$total_amount_CHF)], " |
+| tiefste Gesamtsumme in CHF | Clusters | Spitäler | inländisch | **", format(min(cluster_payment_summary_hco_2015_hospitals_domestic$total_amount_CHF), big.mark = "'"), "** | ", cluster_payment_summary_hco_2015_hospitals_domestic$nr_of_pharma_companies[which.min(cluster_payment_summary_hco_2015_hospitals_domestic$total_amount_CHF)], " | ", cluster_payment_summary_hco_2015_hospitals_domestic$payment_receiver_cluster[which.min(cluster_payment_summary_hco_2015_hospitals_domestic$total_amount_CHF)], " |
+| tiefste Gesamtsumme in CHF | Clusters | Spitäler | international | **", format(min(cluster_payment_summary_hco_2015_hospitals_foreign$total_amount_CHF), big.mark = "'"), "** | ", cluster_payment_summary_hco_2015_hospitals_foreign$nr_of_pharma_companies[which.min(cluster_payment_summary_hco_2015_hospitals_foreign$total_amount_CHF)], " | ", cluster_payment_summary_hco_2015_hospitals_foreign$payment_receiver_cluster[which.min(cluster_payment_summary_hco_2015_hospitals_foreign$total_amount_CHF)], " |
+| tiefste Gesamtsumme in CHF | Clusters | andere | beides | **", format(min(cluster_payment_summary_hco_2015_non_hospitals$total_amount_CHF), big.mark = "'"), "** | ", cluster_payment_summary_hco_2015_non_hospitals$nr_of_pharma_companies[which.min(cluster_payment_summary_hco_2015_non_hospitals$total_amount_CHF)], " | ", cluster_payment_summary_hco_2015_non_hospitals$payment_receiver_cluster[which.min(cluster_payment_summary_hco_2015_non_hospitals$total_amount_CHF)], " |
+| tiefste Gesamtsumme in CHF | Clusters | andere | inländisch | **", format(min(cluster_payment_summary_hco_2015_non_hospitals_domestic$total_amount_CHF), big.mark = "'"), "** | ", cluster_payment_summary_hco_2015_non_hospitals_domestic$nr_of_pharma_companies[which.min(cluster_payment_summary_hco_2015_non_hospitals_domestic$total_amount_CHF)], " | ", cluster_payment_summary_hco_2015_non_hospitals_domestic$payment_receiver_cluster[which.min(cluster_payment_summary_hco_2015_non_hospitals_domestic$total_amount_CHF)], " |
+| tiefste Gesamtsumme in CHF | Clusters | andere | international | **", format(min(cluster_payment_summary_hco_2015_non_hospitals_foreign$total_amount_CHF), big.mark = "'"), "** | ", cluster_payment_summary_hco_2015_non_hospitals_foreign$nr_of_pharma_companies[which.min(cluster_payment_summary_hco_2015_non_hospitals_foreign$total_amount_CHF)], " | ", cluster_payment_summary_hco_2015_non_hospitals_foreign$payment_receiver_cluster[which.min(cluster_payment_summary_hco_2015_non_hospitals_foreign$total_amount_CHF)], " |
+| tiefste Gesamtsumme in CHF | Superclusters | beides | beides | **", format(min(supercluster_payment_summary_hco_2015_non_anon$total_amount_CHF), big.mark = "'"), "** | ", supercluster_payment_summary_hco_2015_non_anon$nr_of_pharma_companies[which.min(supercluster_payment_summary_hco_2015_non_anon$total_amount_CHF)], " | ", supercluster_payment_summary_hco_2015_non_anon$payment_receiver_supercluster[which.min(supercluster_payment_summary_hco_2015_non_anon$total_amount_CHF)], " |
+| tiefste Gesamtsumme in CHF | Superclusters | beides | inländisch | **", format(min(supercluster_payment_summary_hco_2015_domestic$total_amount_CHF), big.mark = "'"), "** | ", supercluster_payment_summary_hco_2015_domestic$nr_of_pharma_companies[which.min(supercluster_payment_summary_hco_2015_domestic$total_amount_CHF)], " | ", supercluster_payment_summary_hco_2015_domestic$payment_receiver_supercluster[which.min(supercluster_payment_summary_hco_2015_domestic$total_amount_CHF)], " |
+| tiefste Gesamtsumme in CHF | Superclusters | beides | international | **", format(min(supercluster_payment_summary_hco_2015_foreign$total_amount_CHF), big.mark = "'"), "** | ", supercluster_payment_summary_hco_2015_foreign$nr_of_pharma_companies[which.min(supercluster_payment_summary_hco_2015_foreign$total_amount_CHF)], " | ", supercluster_payment_summary_hco_2015_foreign$payment_receiver_supercluster[which.min(supercluster_payment_summary_hco_2015_foreign$total_amount_CHF)], " |
+| tiefste Gesamtsumme in CHF | Superclusters | Spitäler | beides | **", format(min(supercluster_payment_summary_hco_2015_hospitals$total_amount_CHF), big.mark = "'"), "** | ", supercluster_payment_summary_hco_2015_hospitals$nr_of_pharma_companies[which.min(supercluster_payment_summary_hco_2015_hospitals$total_amount_CHF)], " | ", supercluster_payment_summary_hco_2015_hospitals$payment_receiver_supercluster[which.min(supercluster_payment_summary_hco_2015_hospitals$total_amount_CHF)], " |
+| tiefste Gesamtsumme in CHF | Superclusters | Spitäler | inländisch | **", format(min(supercluster_payment_summary_hco_2015_hospitals_domestic$total_amount_CHF), big.mark = "'"), "** | ", supercluster_payment_summary_hco_2015_hospitals_domestic$nr_of_pharma_companies[which.min(supercluster_payment_summary_hco_2015_hospitals_domestic$total_amount_CHF)], " | ", supercluster_payment_summary_hco_2015_hospitals_domestic$payment_receiver_supercluster[which.min(supercluster_payment_summary_hco_2015_hospitals_domestic$total_amount_CHF)], " |
+| tiefste Gesamtsumme in CHF | Superclusters | Spitäler | international | **", format(min(supercluster_payment_summary_hco_2015_hospitals_foreign$total_amount_CHF), big.mark = "'"), "** | ", supercluster_payment_summary_hco_2015_hospitals_foreign$nr_of_pharma_companies[which.min(supercluster_payment_summary_hco_2015_hospitals_foreign$total_amount_CHF)], " | ", supercluster_payment_summary_hco_2015_hospitals_foreign$payment_receiver_supercluster[which.min(supercluster_payment_summary_hco_2015_hospitals_foreign$total_amount_CHF)], " |
+| tiefste Gesamtsumme in CHF | Superclusters | andere | beides | **", format(min(supercluster_payment_summary_hco_2015_non_hospitals$total_amount_CHF), big.mark = "'"), "** | ", supercluster_payment_summary_hco_2015_non_hospitals$nr_of_pharma_companies[which.min(supercluster_payment_summary_hco_2015_non_hospitals$total_amount_CHF)], " | ", supercluster_payment_summary_hco_2015_non_hospitals$payment_receiver_supercluster[which.min(supercluster_payment_summary_hco_2015_non_hospitals$total_amount_CHF)], " |
+| tiefste Gesamtsumme in CHF | Superclusters | andere | inländisch | **", format(min(supercluster_payment_summary_hco_2015_non_hospitals_domestic$total_amount_CHF), big.mark = "'"), "** | ", supercluster_payment_summary_hco_2015_non_hospitals_domestic$nr_of_pharma_companies[which.min(supercluster_payment_summary_hco_2015_non_hospitals_domestic$total_amount_CHF)], " | ", supercluster_payment_summary_hco_2015_non_hospitals_domestic$payment_receiver_supercluster[which.min(supercluster_payment_summary_hco_2015_non_hospitals_domestic$total_amount_CHF)], " |
+| tiefste Gesamtsumme in CHF | Superclusters | andere | international | **", format(min(supercluster_payment_summary_hco_2015_non_hospitals_foreign$total_amount_CHF), big.mark = "'"), "** | ", supercluster_payment_summary_hco_2015_non_hospitals_foreign$nr_of_pharma_companies[which.min(supercluster_payment_summary_hco_2015_non_hospitals_foreign$total_amount_CHF)], " | ", supercluster_payment_summary_hco_2015_non_hospitals_foreign$payment_receiver_supercluster[which.min(supercluster_payment_summary_hco_2015_non_hospitals_foreign$total_amount_CHF)], " |
+| mittlere Gesamtsumme in CHF | Clusters | beides | beides | **", format(mean(cluster_payment_summary_hco_2015_non_anon$total_amount_CHF), big.mark = "'"), "** | - | - |
+| mittlere Gesamtsumme in CHF | Clusters | beides | inländisch | **", format(mean(cluster_payment_summary_hco_2015_domestic$total_amount_CHF), big.mark = "'"), "** | - | - |
+| mittlere Gesamtsumme in CHF | Clusters | beides | international | **", format(mean(cluster_payment_summary_hco_2015_foreign$total_amount_CHF), big.mark = "'"), "** | - | - |
+| mittlere Gesamtsumme in CHF | Clusters | Spitäler | beides | **", format(mean(cluster_payment_summary_hco_2015_hospitals$total_amount_CHF), big.mark = "'"), "** | - | - |
+| mittlere Gesamtsumme in CHF | Clusters | Spitäler | inländisch | **", format(mean(cluster_payment_summary_hco_2015_hospitals_domestic$total_amount_CHF), big.mark = "'"), "** | - | - |
+| mittlere Gesamtsumme in CHF | Clusters | Spitäler | international | **", format(mean(cluster_payment_summary_hco_2015_hospitals_foreign$total_amount_CHF), big.mark = "'"), "** | - | - |
+| mittlere Gesamtsumme in CHF | Clusters | andere | beides | **", format(mean(cluster_payment_summary_hco_2015_non_hospitals$total_amount_CHF), big.mark = "'"), "** | - | - |
+| mittlere Gesamtsumme in CHF | Clusters | andere | inländisch | **", format(mean(cluster_payment_summary_hco_2015_non_hospitals_domestic$total_amount_CHF), big.mark = "'"), "** | - | - |
+| mittlere Gesamtsumme in CHF | Clusters | andere | international | **", format(mean(cluster_payment_summary_hco_2015_non_hospitals_foreign$total_amount_CHF), big.mark = "'"), "** | - | - |
+| mittlere Gesamtsumme in CHF | Superclusters | beides | beides | **", format(mean(supercluster_payment_summary_hco_2015_non_anon$total_amount_CHF), big.mark = "'"), "** | - | - |
+| mittlere Gesamtsumme in CHF | Superclusters | beides | inländisch | **", format(mean(supercluster_payment_summary_hco_2015_domestic$total_amount_CHF), big.mark = "'"), "** | - | - |
+| mittlere Gesamtsumme in CHF | Superclusters | beides | international | **", format(mean(supercluster_payment_summary_hco_2015_foreign$total_amount_CHF), big.mark = "'"), "** | - | - |
+| mittlere Gesamtsumme in CHF | Superclusters | Spitäler | beides | **", format(mean(supercluster_payment_summary_hco_2015_hospitals$total_amount_CHF), big.mark = "'"), "** | - | - |
+| mittlere Gesamtsumme in CHF | Superclusters | Spitäler | inländisch | **", format(mean(supercluster_payment_summary_hco_2015_hospitals_domestic$total_amount_CHF), big.mark = "'"), "** | - | - |
+| mittlere Gesamtsumme in CHF | Superclusters | Spitäler | international | **", format(mean(supercluster_payment_summary_hco_2015_hospitals_foreign$total_amount_CHF), big.mark = "'"), "** | - | - |
+| mittlere Gesamtsumme in CHF | Superclusters | andere | beides | **", format(mean(supercluster_payment_summary_hco_2015_non_hospitals$total_amount_CHF), big.mark = "'"), "** | - | - |
+| mittlere Gesamtsumme in CHF | Superclusters | andere | inländisch | **", format(mean(supercluster_payment_summary_hco_2015_non_hospitals_domestic$total_amount_CHF), big.mark = "'"), "** | - | - |
+| mittlere Gesamtsumme in CHF | Superclusters | andere | international | **", format(mean(supercluster_payment_summary_hco_2015_non_hospitals_foreign$total_amount_CHF), big.mark = "'"), "** | - | - |
+| mediane Gesamtsumme in CHF | Clusters | beides | beides | **", format(median(cluster_payment_summary_hco_2015_non_anon$total_amount_CHF), big.mark = "'", digits = 1), "** | - | - |
+| mediane Gesamtsumme in CHF | Clusters | beides | inländisch | **", format(median(cluster_payment_summary_hco_2015_domestic$total_amount_CHF), big.mark = "'", digits = 1), "** | - | - |
+| mediane Gesamtsumme in CHF | Clusters | beides | international | **", format(median(cluster_payment_summary_hco_2015_foreign$total_amount_CHF), big.mark = "'", digits = 1), "** | - | - |
+| mediane Gesamtsumme in CHF | Clusters | Spitäler | beides | **", format(median(cluster_payment_summary_hco_2015_hospitals$total_amount_CHF), big.mark = "'", digits = 1), "** | - | - |
+| mediane Gesamtsumme in CHF | Clusters | Spitäler | inländisch | **", format(median(cluster_payment_summary_hco_2015_hospitals_domestic$total_amount_CHF), big.mark = "'", digits = 1), "** | - | - |
+| mediane Gesamtsumme in CHF | Clusters | Spitäler | international | **", format(median(cluster_payment_summary_hco_2015_hospitals_foreign$total_amount_CHF), big.mark = "'", digits = 1), "** | - | - |
+| mediane Gesamtsumme in CHF | Clusters | andere | beides | **", format(median(cluster_payment_summary_hco_2015_non_hospitals$total_amount_CHF), big.mark = "'", digits = 1), "** | - | - |
+| mediane Gesamtsumme in CHF | Clusters | andere | inländisch | **", format(median(cluster_payment_summary_hco_2015_non_hospitals_domestic$total_amount_CHF), big.mark = "'", digits = 1), "** | - | - |
+| mediane Gesamtsumme in CHF | Clusters | andere | international | **", format(median(cluster_payment_summary_hco_2015_non_hospitals_foreign$total_amount_CHF), big.mark = "'", digits = 1), "** | - | - |
+| mediane Gesamtsumme in CHF | Superclusters | beides | beides | **", format(median(supercluster_payment_summary_hco_2015_non_anon$total_amount_CHF), big.mark = "'", digits = 1), "** | - | - |
+| mediane Gesamtsumme in CHF | Superclusters | beides | inländisch | **", format(median(supercluster_payment_summary_hco_2015_domestic$total_amount_CHF), big.mark = "'", digits = 1), "** | - | - |
+| mediane Gesamtsumme in CHF | Superclusters | beides | international | **", format(median(supercluster_payment_summary_hco_2015_foreign$total_amount_CHF), big.mark = "'", digits = 1), "** | - | - |
+| mediane Gesamtsumme in CHF | Superclusters | Spitäler | beides | **", format(median(supercluster_payment_summary_hco_2015_hospitals$total_amount_CHF), big.mark = "'", digits = 1), "** | - | - |
+| mediane Gesamtsumme in CHF | Superclusters | Spitäler | inländisch | **", format(median(supercluster_payment_summary_hco_2015_hospitals_domestic$total_amount_CHF), big.mark = "'", digits = 1), "** | - | - |
+| mediane Gesamtsumme in CHF | Superclusters | Spitäler | international | **", format(median(supercluster_payment_summary_hco_2015_hospitals_foreign$total_amount_CHF), big.mark = "'", digits = 1), "** | - | - |
+| mediane Gesamtsumme in CHF | Superclusters | andere | beides | **", format(median(supercluster_payment_summary_hco_2015_non_hospitals$total_amount_CHF), big.mark = "'", digits = 1), "** | - | - |
+| mediane Gesamtsumme in CHF | Superclusters | andere | inländisch | **", format(median(supercluster_payment_summary_hco_2015_non_hospitals_domestic$total_amount_CHF), big.mark = "'", digits = 1), "** | - | - |
+| mediane Gesamtsumme in CHF | Superclusters | andere | international | **", format(median(supercluster_payment_summary_hco_2015_non_hospitals_foreign$total_amount_CHF), big.mark = "'", digits = 1), "** | - | - |
+| grösste Anzahl Zahlungen | Clusters | beides | beides | **", format(max(cluster_payment_summary_hco_2015_non_anon$nr_of_payments), big.mark = "'"), "** | ", cluster_payment_summary_hco_2015_non_anon$nr_of_pharma_companies[which.max(cluster_payment_summary_hco_2015_non_anon$nr_of_payments)], " | ", cluster_payment_summary_hco_2015_non_anon$payment_receiver_cluster[which.max(cluster_payment_summary_hco_2015_non_anon$nr_of_payments)], " |
+| grösste Anzahl Zahlungen | Clusters | beides | inländisch | **", format(max(cluster_payment_summary_hco_2015_domestic$nr_of_payments), big.mark = "'"), "** | ", cluster_payment_summary_hco_2015_domestic$nr_of_pharma_companies[which.max(cluster_payment_summary_hco_2015_domestic$nr_of_payments)], " | ", cluster_payment_summary_hco_2015_domestic$payment_receiver_cluster[which.max(cluster_payment_summary_hco_2015_domestic$nr_of_payments)], " |
+| grösste Anzahl Zahlungen | Clusters | beides | international | **", format(max(cluster_payment_summary_hco_2015_foreign$nr_of_payments), big.mark = "'"), "** | ", cluster_payment_summary_hco_2015_foreign$nr_of_pharma_companies[which.max(cluster_payment_summary_hco_2015_foreign$nr_of_payments)], " | ", cluster_payment_summary_hco_2015_foreign$payment_receiver_cluster[which.max(cluster_payment_summary_hco_2015_foreign$nr_of_payments)], " |
+| grösste Anzahl Zahlungen | Clusters | Spitäler | beides | **", format(max(cluster_payment_summary_hco_2015_hospitals$nr_of_payments), big.mark = "'"), "** | ", cluster_payment_summary_hco_2015_hospitals$nr_of_pharma_companies[which.max(cluster_payment_summary_hco_2015_hospitals$nr_of_payments)], " | ", cluster_payment_summary_hco_2015_hospitals$payment_receiver_cluster[which.max(cluster_payment_summary_hco_2015_hospitals$nr_of_payments)], " |
+| grösste Anzahl Zahlungen | Clusters | Spitäler | inländisch | **", format(max(cluster_payment_summary_hco_2015_hospitals_domestic$nr_of_payments), big.mark = "'"), "** | ", cluster_payment_summary_hco_2015_hospitals_domestic$nr_of_pharma_companies[which.max(cluster_payment_summary_hco_2015_hospitals_domestic$nr_of_payments)], " | ", cluster_payment_summary_hco_2015_hospitals_domestic$payment_receiver_cluster[which.max(cluster_payment_summary_hco_2015_hospitals_domestic$nr_of_payments)], " |
+| grösste Anzahl Zahlungen | Clusters | Spitäler | international | **", format(max(cluster_payment_summary_hco_2015_hospitals_foreign$nr_of_payments), big.mark = "'"), "** | ", cluster_payment_summary_hco_2015_hospitals_foreign$nr_of_pharma_companies[which.max(cluster_payment_summary_hco_2015_hospitals_foreign$nr_of_payments)], " | ", cluster_payment_summary_hco_2015_hospitals_foreign$payment_receiver_cluster[which.max(cluster_payment_summary_hco_2015_hospitals_foreign$nr_of_payments)], " |
+| grösste Anzahl Zahlungen | Clusters | andere | beides | **", format(max(cluster_payment_summary_hco_2015_non_hospitals$nr_of_payments), big.mark = "'"), "** | ", cluster_payment_summary_hco_2015_non_hospitals$nr_of_pharma_companies[which.max(cluster_payment_summary_hco_2015_non_hospitals$nr_of_payments)], " | ", cluster_payment_summary_hco_2015_non_hospitals$payment_receiver_cluster[which.max(cluster_payment_summary_hco_2015_non_hospitals$nr_of_payments)], " |
+| grösste Anzahl Zahlungen | Clusters | andere | inländisch | **", format(max(cluster_payment_summary_hco_2015_non_hospitals_domestic$nr_of_payments), big.mark = "'"), "** | ", cluster_payment_summary_hco_2015_non_hospitals_domestic$nr_of_pharma_companies[which.max(cluster_payment_summary_hco_2015_non_hospitals_domestic$nr_of_payments)], " | ", cluster_payment_summary_hco_2015_non_hospitals_domestic$payment_receiver_cluster[which.max(cluster_payment_summary_hco_2015_non_hospitals_domestic$nr_of_payments)], " |
+| grösste Anzahl Zahlungen | Clusters | andere | international | **", format(max(cluster_payment_summary_hco_2015_non_hospitals_foreign$nr_of_payments), big.mark = "'"), "** | ", cluster_payment_summary_hco_2015_non_hospitals_foreign$nr_of_pharma_companies[which.max(cluster_payment_summary_hco_2015_non_hospitals_foreign$nr_of_payments)], " | ", cluster_payment_summary_hco_2015_non_hospitals_foreign$payment_receiver_cluster[which.max(cluster_payment_summary_hco_2015_non_hospitals_foreign$nr_of_payments)], " |
+| grösste Anzahl Zahlungen | Superclusters | beides | beides | **", format(max(supercluster_payment_summary_hco_2015_non_anon$nr_of_payments), big.mark = "'"), "** | ", supercluster_payment_summary_hco_2015_non_anon$nr_of_pharma_companies[which.max(supercluster_payment_summary_hco_2015_non_anon$nr_of_payments)], " | ", supercluster_payment_summary_hco_2015_non_anon$payment_receiver_supercluster[which.max(supercluster_payment_summary_hco_2015_non_anon$nr_of_payments)], " |
+| grösste Anzahl Zahlungen | Superclusters | beides | inländisch | **", format(max(supercluster_payment_summary_hco_2015_domestic$nr_of_payments), big.mark = "'"), "** | ", supercluster_payment_summary_hco_2015_domestic$nr_of_pharma_companies[which.max(supercluster_payment_summary_hco_2015_domestic$nr_of_payments)], " | ", supercluster_payment_summary_hco_2015_domestic$payment_receiver_supercluster[which.max(supercluster_payment_summary_hco_2015_domestic$nr_of_payments)], " |
+| grösste Anzahl Zahlungen | Superclusters | beides | international | **", format(max(supercluster_payment_summary_hco_2015_foreign$nr_of_payments), big.mark = "'"), "** | ", supercluster_payment_summary_hco_2015_foreign$nr_of_pharma_companies[which.max(supercluster_payment_summary_hco_2015_foreign$nr_of_payments)], " | ", supercluster_payment_summary_hco_2015_foreign$payment_receiver_supercluster[which.max(supercluster_payment_summary_hco_2015_foreign$nr_of_payments)], " |
+| grösste Anzahl Zahlungen | Superclusters | Spitäler | beides | **", format(max(supercluster_payment_summary_hco_2015_hospitals$nr_of_payments), big.mark = "'"), "** | ", supercluster_payment_summary_hco_2015_hospitals$nr_of_pharma_companies[which.max(supercluster_payment_summary_hco_2015_hospitals$nr_of_payments)], " | ", supercluster_payment_summary_hco_2015_hospitals$payment_receiver_supercluster[which.max(supercluster_payment_summary_hco_2015_hospitals$nr_of_payments)], " |
+| grösste Anzahl Zahlungen | Superclusters | Spitäler | inländisch | **", format(max(supercluster_payment_summary_hco_2015_hospitals_domestic$nr_of_payments), big.mark = "'"), "** | ", supercluster_payment_summary_hco_2015_hospitals_domestic$nr_of_pharma_companies[which.max(supercluster_payment_summary_hco_2015_hospitals_domestic$nr_of_payments)], " | ", supercluster_payment_summary_hco_2015_hospitals_domestic$payment_receiver_supercluster[which.max(supercluster_payment_summary_hco_2015_hospitals_domestic$nr_of_payments)], " |
+| grösste Anzahl Zahlungen | Superclusters | Spitäler | international | **", format(max(supercluster_payment_summary_hco_2015_hospitals_foreign$nr_of_payments), big.mark = "'"), "** | ", supercluster_payment_summary_hco_2015_hospitals_foreign$nr_of_pharma_companies[which.max(supercluster_payment_summary_hco_2015_hospitals_foreign$nr_of_payments)], " | ", supercluster_payment_summary_hco_2015_hospitals_foreign$payment_receiver_supercluster[which.max(supercluster_payment_summary_hco_2015_hospitals_foreign$nr_of_payments)], " |
+| grösste Anzahl Zahlungen | Superclusters | andere | beides | **", format(max(supercluster_payment_summary_hco_2015_non_hospitals$nr_of_payments), big.mark = "'"), "** | ", supercluster_payment_summary_hco_2015_non_hospitals$nr_of_pharma_companies[which.max(supercluster_payment_summary_hco_2015_non_hospitals$nr_of_payments)], " | ", supercluster_payment_summary_hco_2015_non_hospitals$payment_receiver_supercluster[which.max(supercluster_payment_summary_hco_2015_non_hospitals$nr_of_payments)], " |
+| grösste Anzahl Zahlungen | Superclusters | andere | inländisch | **", format(max(supercluster_payment_summary_hco_2015_non_hospitals_domestic$nr_of_payments), big.mark = "'"), "** | ", supercluster_payment_summary_hco_2015_non_hospitals_domestic$nr_of_pharma_companies[which.max(supercluster_payment_summary_hco_2015_non_hospitals_domestic$nr_of_payments)], " | ", supercluster_payment_summary_hco_2015_non_hospitals_domestic$payment_receiver_supercluster[which.max(supercluster_payment_summary_hco_2015_non_hospitals_domestic$nr_of_payments)], " |
+| grösste Anzahl Zahlungen | Superclusters | andere | international | **", format(max(supercluster_payment_summary_hco_2015_non_hospitals_foreign$nr_of_payments), big.mark = "'"), "** | ", supercluster_payment_summary_hco_2015_non_hospitals_foreign$nr_of_pharma_companies[which.max(supercluster_payment_summary_hco_2015_non_hospitals_foreign$nr_of_payments)], " | ", supercluster_payment_summary_hco_2015_non_hospitals_foreign$payment_receiver_supercluster[which.max(supercluster_payment_summary_hco_2015_non_hospitals_foreign$nr_of_payments)], " |
+| kleinste Anzahl Zahlungen | Clusters | beides | beides | **", format(min(cluster_payment_summary_hco_2015_non_anon$nr_of_payments), big.mark = "'"), "** | ", cluster_payment_summary_hco_2015_non_anon$nr_of_pharma_companies[which.min(cluster_payment_summary_hco_2015_non_anon$nr_of_payments)], " | _mehrere_ |
+| kleinste Anzahl Zahlungen | Clusters | beides | inländisch | **", format(min(cluster_payment_summary_hco_2015_domestic$nr_of_payments), big.mark = "'"), "** | ", cluster_payment_summary_hco_2015_domestic$nr_of_pharma_companies[which.min(cluster_payment_summary_hco_2015_domestic$nr_of_payments)], " | _mehrere_ |
+| kleinste Anzahl Zahlungen | Clusters | beides | international | **", format(min(cluster_payment_summary_hco_2015_foreign$nr_of_payments), big.mark = "'"), "** | ", cluster_payment_summary_hco_2015_foreign$nr_of_pharma_companies[which.min(cluster_payment_summary_hco_2015_foreign$nr_of_payments)], " | _mehrere_ |
+| kleinste Anzahl Zahlungen | Clusters | Spitäler | beides | **", format(min(cluster_payment_summary_hco_2015_hospitals$nr_of_payments), big.mark = "'"), "** | ", cluster_payment_summary_hco_2015_hospitals$nr_of_pharma_companies[which.min(cluster_payment_summary_hco_2015_hospitals$nr_of_payments)], " | _mehrere_ |
+| kleinste Anzahl Zahlungen | Clusters | Spitäler | inländisch | **", format(min(cluster_payment_summary_hco_2015_hospitals_domestic$nr_of_payments), big.mark = "'"), "** | ", cluster_payment_summary_hco_2015_hospitals_domestic$nr_of_pharma_companies[which.min(cluster_payment_summary_hco_2015_hospitals_domestic$nr_of_payments)], " | _mehrere_ |
+| kleinste Anzahl Zahlungen | Clusters | Spitäler | international | **", format(min(cluster_payment_summary_hco_2015_hospitals_foreign$nr_of_payments), big.mark = "'"), "** | ", cluster_payment_summary_hco_2015_hospitals_foreign$nr_of_pharma_companies[which.min(cluster_payment_summary_hco_2015_hospitals_foreign$nr_of_payments)], " | _mehrere_ |
+| kleinste Anzahl Zahlungen | Clusters | andere | beides | **", format(min(cluster_payment_summary_hco_2015_non_hospitals$nr_of_payments), big.mark = "'"), "** | ", cluster_payment_summary_hco_2015_non_hospitals$nr_of_pharma_companies[which.min(cluster_payment_summary_hco_2015_non_hospitals$nr_of_payments)], " | _mehrere_ |
+| kleinste Anzahl Zahlungen | Clusters | andere | inländisch | **", format(min(cluster_payment_summary_hco_2015_non_hospitals_domestic$nr_of_payments), big.mark = "'"), "** | ", cluster_payment_summary_hco_2015_non_hospitals_domestic$nr_of_pharma_companies[which.min(cluster_payment_summary_hco_2015_non_hospitals_domestic$nr_of_payments)], " | _mehrere_ |
+| kleinste Anzahl Zahlungen | Clusters | andere | international | **", format(min(cluster_payment_summary_hco_2015_non_hospitals_foreign$nr_of_payments), big.mark = "'"), "** | ", cluster_payment_summary_hco_2015_non_hospitals_foreign$nr_of_pharma_companies[which.min(cluster_payment_summary_hco_2015_non_hospitals_foreign$nr_of_payments)], " | _mehrere_ |
+| kleinste Anzahl Zahlungen | Superclusters | beides | beides | **", format(min(supercluster_payment_summary_hco_2015_non_anon$nr_of_payments), big.mark = "'"), "** | ", supercluster_payment_summary_hco_2015_non_anon$nr_of_pharma_companies[which.min(supercluster_payment_summary_hco_2015_non_anon$nr_of_payments)], " | _mehrere_ |
+| kleinste Anzahl Zahlungen | Superclusters | beides | inländisch | **", format(min(supercluster_payment_summary_hco_2015_domestic$nr_of_payments), big.mark = "'"), "** | ", supercluster_payment_summary_hco_2015_domestic$nr_of_pharma_companies[which.min(supercluster_payment_summary_hco_2015_domestic$nr_of_payments)], " | _mehrere_ |
+| kleinste Anzahl Zahlungen | Superclusters | beides | international | **", format(min(supercluster_payment_summary_hco_2015_foreign$nr_of_payments), big.mark = "'"), "** | ", supercluster_payment_summary_hco_2015_foreign$nr_of_pharma_companies[which.min(supercluster_payment_summary_hco_2015_foreign$nr_of_payments)], " | _mehrere_ |
+| kleinste Anzahl Zahlungen | Superclusters | Spitäler | beides | **", format(min(supercluster_payment_summary_hco_2015_hospitals$nr_of_payments), big.mark = "'"), "** | ", supercluster_payment_summary_hco_2015_hospitals$nr_of_pharma_companies[which.min(supercluster_payment_summary_hco_2015_hospitals$nr_of_payments)], " | _mehrere_ |
+| kleinste Anzahl Zahlungen | Superclusters | Spitäler | inländisch | **", format(min(supercluster_payment_summary_hco_2015_hospitals_domestic$nr_of_payments), big.mark = "'"), "** | ", supercluster_payment_summary_hco_2015_hospitals_domestic$nr_of_pharma_companies[which.min(supercluster_payment_summary_hco_2015_hospitals_domestic$nr_of_payments)], " | _mehrere_ |
+| kleinste Anzahl Zahlungen | Superclusters | Spitäler | international | **", format(min(supercluster_payment_summary_hco_2015_hospitals_foreign$nr_of_payments), big.mark = "'"), "** | ", supercluster_payment_summary_hco_2015_hospitals_foreign$nr_of_pharma_companies[which.min(supercluster_payment_summary_hco_2015_hospitals_foreign$nr_of_payments)], " | _mehrere_ |
+| kleinste Anzahl Zahlungen | Superclusters | andere | beides | **", format(min(supercluster_payment_summary_hco_2015_non_hospitals$nr_of_payments), big.mark = "'"), "** | ", supercluster_payment_summary_hco_2015_non_hospitals$nr_of_pharma_companies[which.min(supercluster_payment_summary_hco_2015_non_hospitals$nr_of_payments)], " | _mehrere_ |
+| kleinste Anzahl Zahlungen | Superclusters | andere | inländisch | **", format(min(supercluster_payment_summary_hco_2015_non_hospitals_domestic$nr_of_payments), big.mark = "'"), "** | ", supercluster_payment_summary_hco_2015_non_hospitals_domestic$nr_of_pharma_companies[which.min(supercluster_payment_summary_hco_2015_non_hospitals_domestic$nr_of_payments)], " | _mehrere_ |
+| kleinste Anzahl Zahlungen | Superclusters | andere | international | **", format(min(supercluster_payment_summary_hco_2015_non_hospitals_foreign$nr_of_payments), big.mark = "'"), "** | ", supercluster_payment_summary_hco_2015_non_hospitals_foreign$nr_of_pharma_companies[which.min(supercluster_payment_summary_hco_2015_non_hospitals_foreign$nr_of_payments)], " | _mehrere_ |
+| mittlere Anzahl Zahlungen | Clusters | beides | beides | **", format(mean(cluster_payment_summary_hco_2015_non_anon$nr_of_payments), big.mark = "'", nsmall = 1, digits = 2), "** | - | - |
+| mittlere Anzahl Zahlungen | Clusters | beides | inländisch | **", format(mean(cluster_payment_summary_hco_2015_domestic$nr_of_payments), big.mark = "'", nsmall = 1, digits = 2), "** | - | - |
+| mittlere Anzahl Zahlungen | Clusters | beides | international | **", format(mean(cluster_payment_summary_hco_2015_foreign$nr_of_payments), big.mark = "'", nsmall = 1, digits = 2), "** | - | - |
+| mittlere Anzahl Zahlungen | Clusters | Spitäler | beides | **", format(mean(cluster_payment_summary_hco_2015_hospitals$nr_of_payments), big.mark = "'", nsmall = 1, digits = 2), "** | - | - |
+| mittlere Anzahl Zahlungen | Clusters | Spitäler | inländisch | **", format(mean(cluster_payment_summary_hco_2015_hospitals_domestic$nr_of_payments), big.mark = "'", nsmall = 1, digits = 2), "** | - | - |
+| mittlere Anzahl Zahlungen | Clusters | Spitäler | international | **", format(mean(cluster_payment_summary_hco_2015_hospitals_foreign$nr_of_payments), big.mark = "'", nsmall = 1, digits = 2), "** | - | - |
+| mittlere Anzahl Zahlungen | Clusters | andere | beides | **", format(mean(cluster_payment_summary_hco_2015_non_hospitals$nr_of_payments), big.mark = "'", nsmall = 1, digits = 2), "** | - | - |
+| mittlere Anzahl Zahlungen | Clusters | andere | inländisch | **", format(mean(cluster_payment_summary_hco_2015_non_hospitals_domestic$nr_of_payments), big.mark = "'", nsmall = 1, digits = 2), "** | - | - |
+| mittlere Anzahl Zahlungen | Clusters | andere | international | **", format(mean(cluster_payment_summary_hco_2015_non_hospitals_foreign$nr_of_payments), big.mark = "'", nsmall = 1, digits = 2), "** | - | - |
+| mittlere Anzahl Zahlungen | Superclusters | beides | beides | **", format(mean(supercluster_payment_summary_hco_2015_non_anon$nr_of_payments), big.mark = "'", nsmall = 1, digits = 2), "** | - | - |
+| mittlere Anzahl Zahlungen | Superclusters | beides | inländisch | **", format(mean(supercluster_payment_summary_hco_2015_domestic$nr_of_payments), big.mark = "'", nsmall = 1, digits = 2), "** | - | - |
+| mittlere Anzahl Zahlungen | Superclusters | beides | international | **", format(mean(supercluster_payment_summary_hco_2015_foreign$nr_of_payments), big.mark = "'", nsmall = 1, digits = 2), "** | - | - |
+| mittlere Anzahl Zahlungen | Superclusters | Spitäler | beides | **", format(mean(supercluster_payment_summary_hco_2015_hospitals$nr_of_payments), big.mark = "'", nsmall = 1, digits = 2), "** | - | - |
+| mittlere Anzahl Zahlungen | Superclusters | Spitäler | inländisch | **", format(mean(supercluster_payment_summary_hco_2015_hospitals_domestic$nr_of_payments), big.mark = "'", nsmall = 1, digits = 2), "** | - | - |
+| mittlere Anzahl Zahlungen | Superclusters | Spitäler | international | **", format(mean(supercluster_payment_summary_hco_2015_hospitals_foreign$nr_of_payments), big.mark = "'", nsmall = 1, digits = 2), "** | - | - |
+| mittlere Anzahl Zahlungen | Superclusters | andere | beides | **", format(mean(supercluster_payment_summary_hco_2015_non_hospitals$nr_of_payments), big.mark = "'", nsmall = 1, digits = 2), "** | - | - |
+| mittlere Anzahl Zahlungen | Superclusters | andere | inländisch | **", format(mean(supercluster_payment_summary_hco_2015_non_hospitals_domestic$nr_of_payments), big.mark = "'", nsmall = 1, digits = 2), "** | - | - |
+| mittlere Anzahl Zahlungen | Superclusters | andere | international | **", format(mean(supercluster_payment_summary_hco_2015_non_hospitals_foreign$nr_of_payments), big.mark = "'", nsmall = 1, digits = 2), "** | - | - |
+| mediane Anzahl Zahlungen | Clusters | beides | beides | **", format(median(cluster_payment_summary_hco_2015_non_anon$nr_of_payments), big.mark = "'"), "** | - | - |
+| mediane Anzahl Zahlungen | Clusters | beides | inländisch | **", format(median(cluster_payment_summary_hco_2015_domestic$nr_of_payments), big.mark = "'"), "** | - | - |
+| mediane Anzahl Zahlungen | Clusters | beides | international | **", format(median(cluster_payment_summary_hco_2015_foreign$nr_of_payments), big.mark = "'"), "** | - | - |
+| mediane Anzahl Zahlungen | Clusters | Spitäler | beides | **", format(median(cluster_payment_summary_hco_2015_hospitals$nr_of_payments), big.mark = "'"), "** | - | - |
+| mediane Anzahl Zahlungen | Clusters | Spitäler | inländisch | **", format(median(cluster_payment_summary_hco_2015_hospitals_domestic$nr_of_payments), big.mark = "'"), "** | - | - |
+| mediane Anzahl Zahlungen | Clusters | Spitäler | international | **", format(median(cluster_payment_summary_hco_2015_hospitals_foreign$nr_of_payments), big.mark = "'"), "** | - | - |
+| mediane Anzahl Zahlungen | Clusters | andere | beides | **", format(median(cluster_payment_summary_hco_2015_non_hospitals$nr_of_payments), big.mark = "'"), "** | - | - |
+| mediane Anzahl Zahlungen | Clusters | andere | inländisch | **", format(median(cluster_payment_summary_hco_2015_non_hospitals_domestic$nr_of_payments), big.mark = "'"), "** | - | - |
+| mediane Anzahl Zahlungen | Clusters | andere | international | **", format(median(cluster_payment_summary_hco_2015_non_hospitals_foreign$nr_of_payments), big.mark = "'"), "** | - | - |
+| mediane Anzahl Zahlungen | Superclusters | beides | beides | **", format(median(supercluster_payment_summary_hco_2015_non_anon$nr_of_payments), big.mark = "'"), "** | - | - |
+| mediane Anzahl Zahlungen | Superclusters | beides | inländisch | **", format(median(supercluster_payment_summary_hco_2015_domestic$nr_of_payments), big.mark = "'"), "** | - | - |
+| mediane Anzahl Zahlungen | Superclusters | beides | international | **", format(median(supercluster_payment_summary_hco_2015_foreign$nr_of_payments), big.mark = "'"), "** | - | - |
+| mediane Anzahl Zahlungen | Superclusters | Spitäler | beides | **", format(median(supercluster_payment_summary_hco_2015_hospitals$nr_of_payments), big.mark = "'"), "** | - | - |
+| mediane Anzahl Zahlungen | Superclusters | Spitäler | inländisch | **", format(median(supercluster_payment_summary_hco_2015_hospitals_domestic$nr_of_payments), big.mark = "'"), "** | - | - |
+| mediane Anzahl Zahlungen | Superclusters | Spitäler | international | **", format(median(supercluster_payment_summary_hco_2015_hospitals_foreign$nr_of_payments), big.mark = "'"), "** | - | - |
+| mediane Anzahl Zahlungen | Superclusters | andere | beides | **", format(median(supercluster_payment_summary_hco_2015_non_hospitals$nr_of_payments), big.mark = "'"), "** | - | - |
+| mediane Anzahl Zahlungen | Superclusters | andere | inländisch | **", format(median(supercluster_payment_summary_hco_2015_non_hospitals_domestic$nr_of_payments), big.mark = "'"), "** | - | - |
+| mediane Anzahl Zahlungen | Superclusters | andere | international | **", format(median(supercluster_payment_summary_hco_2015_non_hospitals_foreign$nr_of_payments), big.mark = "'"), "** | - | - |  
+")
+cat("Remark: Possible warnings above about returning '-Inf' can be ignored.")
+
+# replace missing/non-existent NA/NULL/Inf values with "-"
+# (the warnings from the min/max commands above can be ignored)
+hco_analysis_summary <-
+  gsub(x = hco_analysis_summary,
+       pattern = paste0("(",
+                        "\\*\\*-?Inf\\*\\*",
+                        "|\\*\\*NA\\*\\*",
+                        "|\\*\\*NaN\\*\\*",
+                        ")"),
+       replacement = "-",
+       ignore.case = FALSE,
+       perl = TRUE)
+
+# write to file
+cat(hco_analysis_summary,
+    file = "output/hco_analysis_summary.md",
+    append = FALSE)
+```
+
+### Miscellaneous
+
+```{r miscellaneous}
+# show nr of anonymous / known payment receivers per company and payment receiver type
+# View(data_main %>% filter(year == 2015) %>% group_by(company_ID, company, payment_receiver_type, is_anonymous) %>% summarise(n()))
+```
