@@ -2,7 +2,7 @@
 
 ## Publikation
 
-Die Daten in diesem Repository beziehen sich auf die Publikationsreihe zu den Zahlungen von Pharmafirmen an Dritte (z.&nbsp;B. [dieser Artikel](http://www.srf.ch/news/schweiz/so-viel-pumpt-die-pharma-in-die-gesundheitsbranche)), publiziert im Zeitraum vom 4. August bis zum 17. Oktober 2016.
+Die Daten in diesem Repository beziehen sich auf die Publikationsreihe zu den Zahlungen von Pharmafirmen an Dritte (z.&nbsp;B. [dieser Artikel](http://www.srf.ch/news/schweiz/so-viel-pumpt-die-pharma-in-die-gesundheitsbranche), oder [diese Grafik](http://www.srf.ch/news/schweiz/wer-hat-geld-von-der-pharma-bekommen-durchsuchen-sie-die-daten)), publiziert im Zeitraum vom 4. August bis zum 17. Oktober 2016.
 
 ## Beschreibung
 
@@ -178,7 +178,7 @@ Die einzelnen Schritte der gesamten Vorverarbeitung werden durch folgendes Fluss
 
 - [**`cluster_payment_summary_hco_2015_by_amount.csv`**](output/cluster_payment_summary_hco_2015_by_amount.csv) und [**`supercluster_payment_summary_hco_2015_by_amount.csv`**](output/supercluster_payment_summary_hco_2015_by_amount.csv)
 
-    Diese beiden Tabellen enthalten die Zahlungssumme pro HCO/PO-Cluster bzw. -Supercluster, geordnet nach Höhe. `supercluster_payment_summary_hco_2015_by_amount.csv` diente als Grundlage für den Artikel [Name_Artikel vom 17. Oktober](hyperlink). Eine nach `is_hospital == FALSE` und `is_foreign == FALSE` gefilterte [Version](output/cluster_payment_summary_hco_2015_by_amount_augmented.csv), die zusätzlich die manuell recherchierte Information beinhaltet, ob es sich beim Empfänger um eine Patientenorganisation oder eine Fachgesellschaft handelt (1 = ja, 0 = nein), wurde als Grundlage für den begleitenden 10vor10-Beitrag verwendet. Datengrundlage für die im Artikel eingebettete, durchsuchbare Tabelle sind hingegen die [aufbereiteten Rohdaten](input/data_main.csv) (siehe Kapitel "Datenbeschreibung des Inputs").
+    Diese beiden Tabellen enthalten die Zahlungssumme pro HCO/PO-Cluster bzw. -Supercluster, geordnet nach Höhe. `supercluster_payment_summary_hco_2015_by_amount.csv` diente als Grundlage für den Artikel [vom 17. Oktober](http://www.srf.ch/news/schweiz/so-haengen-patientenorganisationen-am-tropf-der-pharma). Eine nach `is_hospital == FALSE` und `is_foreign == FALSE` gefilterte [Version](output/cluster_payment_summary_hco_2015_by_amount_augmented.csv), die zusätzlich die manuell recherchierte Information beinhaltet, ob es sich beim Empfänger um eine Patientenorganisation oder eine Fachgesellschaft handelt (1 = ja, 0 = nein), wurde als Grundlage für den begleitenden 10vor10-Beitrag verwendet. Datengrundlage für die im Artikel eingebettete, durchsuchbare Tabelle sind hingegen die [aufbereiteten Rohdaten](input/data_main.csv) (siehe Kapitel "Datenbeschreibung des Inputs").
 
 | Variable | Typ | Beschreibung |
 | :------- | :-- | :----------- |
